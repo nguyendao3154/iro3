@@ -24,4 +24,10 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<variableList>
+		<variable>
+			<name>s</name>
+			<value>file:/D:/Documents/NXP/iro3/apps/gpio</value>
+		</variable>
+	</variableList>
 </projectDescription>

@@ -3278,8 +3278,8 @@ typedef struct {
 /** Peripheral GPIOA base address */
 #define GPIOA_BASE                               (0x400FF000u)
 /** Peripheral GPIOA base pointer */
-#define GPIOA                                    ((GPIO_Type *)GPIOA_BASE)
 /** Peripheral GPIOB base address */
+#define GPIOA                                    ((GPIO_Type *)GPIOA_BASE)
 #define GPIOB_BASE                               (0x400FF040u)
 /** Peripheral GPIOB base pointer */
 #define GPIOB                                    ((GPIO_Type *)GPIOB_BASE)

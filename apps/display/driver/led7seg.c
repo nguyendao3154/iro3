@@ -46,8 +46,10 @@
 const uint8_t LED7_CODE_START[] = {0xFE,};
 
 const uint8_t LED7_CODE[] = {0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xff,0x86};
-const gpio_port_pin_t LED7_PIN[] = {GPIO_PORT_A_PIN_3,GPIO_PORT_A_PIN_0,GPIO_PORT_B_PIN_3,GPIO_PORT_A_PIN_6,GPIO_PORT_A_PIN_4,GPIO_PORT_A_PIN_1,GPIO_PORT_B_PIN_5,GPIO_PORT_B_PIN_1};
-const gpio_port_pin_t LED7_DIGITS[] = {GPIO_PORT_B_PIN_6,GPIO_PORT_4_PIN_4,GPIO_PORT_4_PIN_3,GPIO_PORT_4_PIN_2,GPIO_PORT_E_PIN_3};
+const GPIO_Type LED7_PORT[] = {GPIOD, GPIOC, GPIOB, GPIOB, GPIOE, GPIOC, GPIOB, GPIOE};
+const uint32_t LED7_PIN[] = {7U, 3U, 5U, 6U, 8U, 2U, 4U, 3U};
+const GPIO_Type LED7_PORT_DIGITS[] = {GPIOB, GPIOC, GPIOC, GPIOD, GPIO};
+const gpio_port_pin_t LED7_DIGITS[] = {3U, 0U, 1U,5U, 6U};
 
 /******************************************************************************
 * Local types
@@ -116,19 +118,19 @@ void showDigitAtIndex(uint8_t digit,uint8_t index)
 {
 	for(int i = 0; i<5; i++)
 	{
-		R_GPIO_PinWrite(LED7_DIGITS[i],GPIO_LEVEL_HIGH);
+		GPIO_PortSet(LED7_PORT_DIGITS[i], LED7_DIGITS[i]);
 	}
 	for(int i = 0; i<8;i++)
 	{
-		R_GPIO_PinWrite(LED7_PIN[i],(digit & (1<<i)));
+		GPIO_PinWrite(LED7_PORT[i], (digit & (1<<i)) << LED7_PIN[i]);
 	}
-	R_GPIO_PinWrite(LED7_DIGITS[index],GPIO_LEVEL_LOW);
+	GPIO_PortClear(LED7_PORT_DIGITS[i], LED7_DIGITS[index]);
 }
 void turnOffAllLed()
 {
 	for(int i = 0; i<5; i++)
 	{
-		R_GPIO_PinWrite(LED7_DIGITS[i],GPIO_LEVEL_HIGH);
+		GPIO_PortSet(LED7_PORT_DIGITS[i], LED7_DIGITS[i]);
 	}
 }
 /******************************************************************************

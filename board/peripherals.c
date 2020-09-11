@@ -57,7 +57,7 @@ instance:
     - lpuartConfig:
       - clockSource: 'LpuartClock'
       - lpuartSrcClkFreq: 'BOARD_BootClockRUN'
-      - baudRate_Bps: '9600'
+      - baudRate_Bps: '19200'
       - parityMode: 'kLPUART_ParityDisabled'
       - dataBitsCount: 'kLPUART_EightDataBits'
       - isMsb: 'false'
@@ -72,11 +72,11 @@ instance:
       - rxIdleConfig: 'kLPUART_IdleCharacter1'
       - enableTx: 'true'
       - enableRx: 'true'
-    - quick_selection: 'QuickSelection5'
+    - quick_selection: 'QuickSelection4'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const lpuart_config_t LPUART_1_config = {
-  .baudRate_Bps = 9600,
+  .baudRate_Bps = 19200,
   .parityMode = kLPUART_ParityDisabled,
   .dataBitsCount = kLPUART_EightDataBits,
   .isMsb = false,

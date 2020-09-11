@@ -18,6 +18,7 @@ processor_version: 6.0.1
 
 #include "fsl_common.h"
 #include "fsl_port.h"
+#include "fsl_gpio.h"
 #include "pin_mux.h"
 
 /* FUNCTION ************************************************************************************************************
@@ -39,6 +40,25 @@ BOARD_InitPins:
 - pin_list:
   - {pin_num: '27', peripheral: LPUART0, signal: RX, pin_signal: ADC0_SE4/PTB0/LPUART0_RX/LPSPI0_PCS0/LPTMR0_ALT3/PWT_IN3}
   - {pin_num: '26', peripheral: LPUART0, signal: TX, pin_signal: ADC0_SE5/PTB1/LPUART0_TX/LPSPI0_SOUT/TCLK0}
+  - {pin_num: '12', peripheral: GPIOB, signal: 'GPIO, 6', pin_signal: XTAL/PTB6/LPI2C0_SDA, direction: OUTPUT}
+  - {pin_num: '13', peripheral: GPIOE, signal: 'GPIO, 3', pin_signal: TSI0_CH24/PTE3/FTM0_FLT0/LPUART2_RTS, direction: OUTPUT}
+  - {pin_num: '14', peripheral: GPIOE, signal: 'GPIO, 8', pin_signal: ACMP0_IN3/TSI0_CH11/PTE8, direction: OUTPUT}
+  - {pin_num: '15', peripheral: GPIOB, signal: 'GPIO, 5', pin_signal: TSI0_CH9/PTB5/FTM0_CH5/LPSPI0_PCS1/TRGMUX_IN0, direction: OUTPUT}
+  - {pin_num: '16', peripheral: GPIOB, signal: 'GPIO, 4', pin_signal: TSI0_CH8/PTB4/FTM0_CH4/LPSPI0_SOUT/TRGMUX_IN1, direction: OUTPUT}
+  - {pin_num: '17', peripheral: GPIOC, signal: 'GPIO, 3', pin_signal: ADC0_SE11/ACMP0_IN4/PTC3/FTM0_CH3, direction: OUTPUT}
+  - {pin_num: '18', peripheral: GPIOC, signal: 'GPIO, 2', pin_signal: ADC0_SE10/ACMP0_IN5/PTC2/FTM0_CH2, direction: OUTPUT}
+  - {pin_num: '19', peripheral: GPIOD, signal: 'GPIO, 7', pin_signal: TSI0_CH10/PTD7/LPUART2_TX, direction: OUTPUT}
+  - {pin_num: '20', peripheral: GPIOD, signal: 'GPIO, 6', pin_signal: TSI0_CH7/PTD6/LPUART2_RX, direction: OUTPUT}
+  - {pin_num: '21', peripheral: GPIOD, signal: 'GPIO, 5', pin_signal: TSI0_CH6/PTD5/LPTMR0_ALT2/PWT_IN2/LPUART2_CTS, direction: OUTPUT}
+  - {pin_num: '22', peripheral: GPIOC, signal: 'GPIO, 1', pin_signal: ADC0_SE9/TSI0_CH23/PTC1/FTM0_CH1, direction: OUTPUT}
+  - {pin_num: '23', peripheral: GPIOC, signal: 'GPIO, 0', pin_signal: ADC0_SE8/TSI0_CH22/PTC0/FTM0_CH0, direction: OUTPUT}
+  - {pin_num: '24', peripheral: GPIOB, signal: 'GPIO, 3', pin_signal: ADC0_SE7/TSI0_CH21/PTB3/FTM1_CH1/LPSPI0_SIN/FTM1_QD_PHA/TRGMUX_IN2, direction: OUTPUT}
+  - {pin_num: '3', peripheral: GPIOE, signal: 'GPIO, 11', pin_signal: TSI0_CH3/PTE11/PWT_IN1/LPTMR0_ALT1, direction: OUTPUT}
+  - {pin_num: '4', peripheral: GPIOE, signal: 'GPIO, 10', pin_signal: TSI0_CH2/PTE10/CLKOUT, direction: OUTPUT}
+  - {pin_num: '5', peripheral: GPIOE, signal: 'GPIO, 5', pin_signal: TSI0_CH0/PTE5/TCLK2/CAN0_TX/EWM_IN, direction: OUTPUT}
+  - {pin_num: '6', peripheral: GPIOE, signal: 'GPIO, 4', pin_signal: TSI0_CH1/PTE4/BUSOUT/CAN0_RX/EWM_OUT_b, direction: OUTPUT}
+  - {pin_num: '32', peripheral: GPIOD, signal: 'GPIO, 4', pin_signal: PTD4/FTM0_FLT3, direction: OUTPUT}
+  - {pin_num: '41', peripheral: GPIOE, signal: 'GPIO, 6', pin_signal: PTE6/LPSPI0_PCS2/LPUART1_RTS, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -53,12 +73,208 @@ void BOARD_InitPins(void)
 {
     /* Clock Gate Control: Clock enabled. The current clock selection and divider options are locked. */
     CLOCK_EnableClock(kCLOCK_PortB);
+    /* Clock Gate Control: Clock enabled. The current clock selection and divider options are locked. */
+    CLOCK_EnableClock(kCLOCK_PortC);
+    /* Clock Gate Control: Clock enabled. The current clock selection and divider options are locked. */
+    CLOCK_EnableClock(kCLOCK_PortD);
+    /* Clock Gate Control: Clock enabled. The current clock selection and divider options are locked. */
+    CLOCK_EnableClock(kCLOCK_PortE);
+
+    gpio_pin_config_t gpiob_pin24_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB3 (pin 24)  */
+    GPIO_PinInit(GPIOB, 3U, &gpiob_pin24_config);
+
+    gpio_pin_config_t gpiob_pin16_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB4 (pin 16)  */
+    GPIO_PinInit(GPIOB, 4U, &gpiob_pin16_config);
+
+    gpio_pin_config_t gpiob_pin15_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB5 (pin 15)  */
+    GPIO_PinInit(GPIOB, 5U, &gpiob_pin15_config);
+
+    gpio_pin_config_t gpiob_pin12_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB6 (pin 12)  */
+    GPIO_PinInit(GPIOB, 6U, &gpiob_pin12_config);
+
+    gpio_pin_config_t gpioc_pin23_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTC0 (pin 23)  */
+    GPIO_PinInit(GPIOC, 0U, &gpioc_pin23_config);
+
+    gpio_pin_config_t gpioc_pin22_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTC1 (pin 22)  */
+    GPIO_PinInit(GPIOC, 1U, &gpioc_pin22_config);
+
+    gpio_pin_config_t gpioc_pin18_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTC2 (pin 18)  */
+    GPIO_PinInit(GPIOC, 2U, &gpioc_pin18_config);
+
+    gpio_pin_config_t gpioc_pin17_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTC3 (pin 17)  */
+    GPIO_PinInit(GPIOC, 3U, &gpioc_pin17_config);
+
+    gpio_pin_config_t gpiod_pin32_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTD4 (pin 32)  */
+    GPIO_PinInit(GPIOD, 4U, &gpiod_pin32_config);
+
+    gpio_pin_config_t gpiod_pin21_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTD5 (pin 21)  */
+    GPIO_PinInit(GPIOD, 5U, &gpiod_pin21_config);
+
+    gpio_pin_config_t gpiod_pin20_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTD6 (pin 20)  */
+    GPIO_PinInit(GPIOD, 6U, &gpiod_pin20_config);
+
+    gpio_pin_config_t gpiod_pin19_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTD7 (pin 19)  */
+    GPIO_PinInit(GPIOD, 7U, &gpiod_pin19_config);
+
+    gpio_pin_config_t gpioe_pin13_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTE3 (pin 13)  */
+    GPIO_PinInit(GPIOE, 3U, &gpioe_pin13_config);
+
+    gpio_pin_config_t gpioe_pin6_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTE4 (pin 6)  */
+    GPIO_PinInit(GPIOE, 4U, &gpioe_pin6_config);
+
+    gpio_pin_config_t gpioe_pin5_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTE5 (pin 5)  */
+    GPIO_PinInit(GPIOE, 5U, &gpioe_pin5_config);
+
+    gpio_pin_config_t gpioe_pin41_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTE6 (pin 41)  */
+    GPIO_PinInit(GPIOE, 6U, &gpioe_pin41_config);
+
+    gpio_pin_config_t gpioe_pin14_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTE8 (pin 14)  */
+    GPIO_PinInit(GPIOE, 8U, &gpioe_pin14_config);
+
+    gpio_pin_config_t gpioe_pin4_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTE10 (pin 4)  */
+    GPIO_PinInit(GPIOE, 10U, &gpioe_pin4_config);
+
+    gpio_pin_config_t gpioe_pin3_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTE11 (pin 3)  */
+    GPIO_PinInit(GPIOE, 11U, &gpioe_pin3_config);
 
     /* PORTB0 (pin 27) is configured as LPUART0_RX */
     PORT_SetPinMux(PORTB, 0U, kPORT_MuxAlt2);
 
     /* PORTB1 (pin 26) is configured as LPUART0_TX */
     PORT_SetPinMux(PORTB, 1U, kPORT_MuxAlt2);
+
+    /* PORTB3 (pin 24) is configured as PTB3 */
+    PORT_SetPinMux(PORTB, 3U, kPORT_MuxAsGpio);
+
+    /* PORTB4 (pin 16) is configured as PTB4 */
+    PORT_SetPinMux(PORTB, 4U, kPORT_MuxAsGpio);
+
+    /* PORTB5 (pin 15) is configured as PTB5 */
+    PORT_SetPinMux(PORTB, 5U, kPORT_MuxAsGpio);
+
+    /* PORTB6 (pin 12) is configured as PTB6 */
+    PORT_SetPinMux(PORTB, 6U, kPORT_MuxAsGpio);
+
+    /* PORTC0 (pin 23) is configured as PTC0 */
+    PORT_SetPinMux(PORTC, 0U, kPORT_MuxAsGpio);
+
+    /* PORTC1 (pin 22) is configured as PTC1 */
+    PORT_SetPinMux(PORTC, 1U, kPORT_MuxAsGpio);
+
+    /* PORTC2 (pin 18) is configured as PTC2 */
+    PORT_SetPinMux(PORTC, 2U, kPORT_MuxAsGpio);
+
+    /* PORTC3 (pin 17) is configured as PTC3 */
+    PORT_SetPinMux(PORTC, 3U, kPORT_MuxAsGpio);
+
+    /* PORTD4 (pin 32) is configured as PTD4 */
+    PORT_SetPinMux(PORTD, 4U, kPORT_MuxAsGpio);
+
+    /* PORTD5 (pin 21) is configured as PTD5 */
+    PORT_SetPinMux(PORTD, 5U, kPORT_MuxAsGpio);
+
+    /* PORTD6 (pin 20) is configured as PTD6 */
+    PORT_SetPinMux(PORTD, 6U, kPORT_MuxAsGpio);
+
+    /* PORTD7 (pin 19) is configured as PTD7 */
+    PORT_SetPinMux(PORTD, 7U, kPORT_MuxAsGpio);
+
+    /* PORTE10 (pin 4) is configured as PTE10 */
+    PORT_SetPinMux(PORTE, 10U, kPORT_MuxAsGpio);
+
+    /* PORTE11 (pin 3) is configured as PTE11 */
+    PORT_SetPinMux(PORTE, 11U, kPORT_MuxAsGpio);
+
+    /* PORTE3 (pin 13) is configured as PTE3 */
+    PORT_SetPinMux(PORTE, 3U, kPORT_MuxAsGpio);
+
+    /* PORTE4 (pin 6) is configured as PTE4 */
+    PORT_SetPinMux(PORTE, 4U, kPORT_MuxAsGpio);
+
+    /* PORTE5 (pin 5) is configured as PTE5 */
+    PORT_SetPinMux(PORTE, 5U, kPORT_MuxAsGpio);
+
+    /* PORTE6 (pin 41) is configured as PTE6 */
+    PORT_SetPinMux(PORTE, 6U, kPORT_MuxAsGpio);
+
+    /* PORTE8 (pin 14) is configured as PTE8 */
+    PORT_SetPinMux(PORTE, 8U, kPORT_MuxAsGpio);
 }
 /***********************************************************************************************************************
  * EOF

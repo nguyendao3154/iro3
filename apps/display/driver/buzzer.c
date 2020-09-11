@@ -77,7 +77,7 @@ void Buzzer_process()
 {
 	if(buzzerIsOn && timeIsAfter(g_sysTime , timeOffBuzzer) )
 	{
-		R_GPIO_PinWrite(BUZZER_PIN, GPIO_LEVEL_LOW);
+		GPIO_PortSet(BUZZER_PORT, BUZZER_PIN);
 		buzzerIsOn = false;
 	}
 	if(timeBuzzerLeft >0)
@@ -97,17 +97,17 @@ void Buzzer_process()
 void Buzzer_onInMs(uint16_t msTime)
 {
 	timeOffBuzzer = g_sysTime + msTime;
-	R_GPIO_PinWrite(BUZZER_PIN, GPIO_LEVEL_HIGH);
+	GPIO_PortSet(BUZZER_PORT, BUZZER_PIN);
 	buzzerIsOn = true;
 }
 void Buzzer_turnOn(bool isOn)
 {
 	if(isOn)
 	{
-		R_GPIO_PinWrite(BUZZER_PIN, GPIO_LEVEL_HIGH);
+		GPIO_PortSet(BUZZER_PORT, BUZZER_PIN);
 	}
 	else{
-		R_GPIO_PinWrite(BUZZER_PIN, GPIO_LEVEL_LOW);
+		GPIO_PortClear(BUZZER_PORT, BUZZER_PIN);
 	}
 }
 void Buzzer_blink(uint8_t time)

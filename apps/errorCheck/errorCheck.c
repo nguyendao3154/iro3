@@ -25,14 +25,14 @@
 
 #include "errorCheck.h"
 #include "gpio.h"
-#include "timeCheck.h"
+//#include "timeCheck.h"
 #include "user_config.h"
-#include "adc.h"
-#include "filter_time.h"
-#include "pumpControl.h"
-#include "adc.h"
+//#include "adc.h"
+//#include "filter_time.h"
+//#include "pumpControl.h"
+//#include "adc.h"
 #include "display.h"
-#include "filterExpire.h"
+//#include "filterExpire.h"
 
 /******************************************************************************
 * External objects
@@ -195,71 +195,71 @@ void checkPumpRunTime()
 		newErrorOccur(ERROR_TYPE_PUMP_RUN_OVER_TIME);
 	}
 }
-void checkTdsLimit()
-{
-#ifdef ENABLE_TDS_LIMIT_CHECK
-	static uint32_t timeTdsLimitIn = 0, timeTdsLimitOut = 0;
-	if((ADC_GetTdsValueDisplay(TDS_IN_VALUE) > g_userConfig.tdsLimitIn) && (!currentErrors[ERROR_TYPE_TDS_IN]))
-	{
-		if(timeTdsLimitIn == 0)
-		{
-			timeTdsLimitIn = g_sysTime;
-		}else if(elapsedTime(g_sysTime,timeTdsLimitIn) > TDS_LIMIT_DELAY)
-		{
-			newErrorOccur(ERROR_TYPE_TDS_IN);
-		}
-	}
-	if((ADC_GetTdsValueDisplay(TDS_OUT_VALUE) > g_userConfig.tdsLimitOut)&& (!currentErrors[ERROR_TYPE_TDS_OUT]))
-	{
-		if(timeTdsLimitOut == 0)
-		{
-			timeTdsLimitOut = g_sysTime;
-		}else if(elapsedTime(g_sysTime,timeTdsLimitOut) > TDS_LIMIT_DELAY)
-		{
-			newErrorOccur(ERROR_TYPE_TDS_OUT);
-		}
-	}
-	if(ADC_GetTdsValueDisplay(TDS_IN_VALUE) < g_userConfig.tdsLimitIn)
-	{
-		if(currentErrors[ERROR_TYPE_TDS_IN])
-		{
-			currentErrors[ERROR_TYPE_TDS_IN] = false;
-		}
-		timeTdsLimitIn = 0;
-	}
-	if(ADC_GetTdsValueDisplay(TDS_OUT_VALUE) < g_userConfig.tdsLimitOut)
-	{
-		if(currentErrors[ERROR_TYPE_TDS_OUT])
-		{
-			currentErrors[ERROR_TYPE_TDS_OUT] = false;
-		}
-		timeTdsLimitOut = 0;
-	}
-#endif
-}
+//void checkTdsLimit()
+//{
+//#ifdef ENABLE_TDS_LIMIT_CHECK
+//	static uint32_t timeTdsLimitIn = 0, timeTdsLimitOut = 0;
+//	if((ADC_GetTdsValueDisplay(TDS_IN_VALUE) > g_userConfig.tdsLimitIn) && (!currentErrors[ERROR_TYPE_TDS_IN]))
+//	{
+//		if(timeTdsLimitIn == 0)
+//		{
+//			timeTdsLimitIn = g_sysTime;
+//		}else if(elapsedTime(g_sysTime,timeTdsLimitIn) > TDS_LIMIT_DELAY)
+//		{
+//			newErrorOccur(ERROR_TYPE_TDS_IN);
+//		}
+//	}
+//	if((ADC_GetTdsValueDisplay(TDS_OUT_VALUE) > g_userConfig.tdsLimitOut)&& (!currentErrors[ERROR_TYPE_TDS_OUT]))
+//	{
+//		if(timeTdsLimitOut == 0)
+//		{
+//			timeTdsLimitOut = g_sysTime;
+//		}else if(elapsedTime(g_sysTime,timeTdsLimitOut) > TDS_LIMIT_DELAY)
+//		{
+//			newErrorOccur(ERROR_TYPE_TDS_OUT);
+//		}
+//	}
+//	if(ADC_GetTdsValueDisplay(TDS_IN_VALUE) < g_userConfig.tdsLimitIn)
+//	{
+//		if(currentErrors[ERROR_TYPE_TDS_IN])
+//		{
+//			currentErrors[ERROR_TYPE_TDS_IN] = false;
+//		}
+//		timeTdsLimitIn = 0;
+//	}
+//	if(ADC_GetTdsValueDisplay(TDS_OUT_VALUE) < g_userConfig.tdsLimitOut)
+//	{
+//		if(currentErrors[ERROR_TYPE_TDS_OUT])
+//		{
+//			currentErrors[ERROR_TYPE_TDS_OUT] = false;
+//		}
+//		timeTdsLimitOut = 0;
+//	}
+//#endif
+//}
 /*
  * check dò nước cổng dò 1.
  * nếu nước rò, 10s sau kiểm tra lại, vẫn rò thì báo lỗi.
  *
  * */
-void checkH2ODet()
-{
-	static bool waterIsLeak = false;
-	static uint32_t timeStartLeak = 0;
-	if(ADC_GetH2oDet(H2O_1) && (!currentErrors[ERROR_TYPE_LEAK_WATER]))
-	{
-		if(!waterIsLeak)
-		{
-			waterIsLeak = true;
-			timeStartLeak = g_sysTime;
-		}
-		if(waterIsLeak && (elapsedTime(g_sysTime, timeStartLeak) >= 10000))
-		{
-			pumpControl_turnOffAll();
-			newErrorOccur(ERROR_TYPE_LEAK_WATER);
-		}
-	}
-}
+//void checkH2ODet()
+//{
+//	static bool waterIsLeak = false;
+//	static uint32_t timeStartLeak = 0;
+//	if(ADC_GetH2oDet(H2O_1) && (!currentErrors[ERROR_TYPE_LEAK_WATER]))
+//	{
+//		if(!waterIsLeak)
+//		{
+//			waterIsLeak = true;
+//			timeStartLeak = g_sysTime;
+//		}
+//		if(waterIsLeak && (elapsedTime(g_sysTime, timeStartLeak) >= 10000))
+//		{
+//			pumpControl_turnOffAll();
+//			newErrorOccur(ERROR_TYPE_LEAK_WATER);
+//		}
+//	}
+//}
 /******************************************************************************
 * Global functions
 ******************************************************************************/
