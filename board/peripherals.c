@@ -48,7 +48,7 @@ component:
 instance:
 - name: 'LPUART_1'
 - type: 'lpuart'
-- mode: 'polling'
+- mode: 'interrupts'
 - type_id: 'lpuart_bebe3e12b6ec22bbd14199038f2bf459'
 - functional_group: 'BOARD_InitPeripherals'
 - peripheral: 'LPUART0'
@@ -73,6 +73,16 @@ instance:
       - enableTx: 'true'
       - enableRx: 'true'
     - quick_selection: 'QuickSelection4'
+  - interruptsCfg:
+    - interrupts: 'kLPUART_TxDataRegEmptyInterruptEnable kLPUART_TransmissionCompleteInterruptEnable kLPUART_RxDataRegFullInterruptEnable kLPUART_RxOverrunInterruptEnable'
+    - interrupt_vectors:
+      - enable_rx_tx_irq: 'true'
+      - interrupt_rx_tx:
+        - IRQn: 'LPUART0_IRQn'
+        - enable_priority: 'false'
+        - priority: '0'
+        - enable_custom_name: 'false'
+    - quick_selection: 'QuickSelection1'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const lpuart_config_t LPUART_1_config = {
@@ -95,6 +105,9 @@ const lpuart_config_t LPUART_1_config = {
 
 void LPUART_1_init(void) {
   LPUART_Init(LPUART_1_PERIPHERAL, &LPUART_1_config, LPUART_1_CLOCK_SOURCE);
+  LPUART_EnableInterrupts(LPUART_1_PERIPHERAL, kLPUART_TxDataRegEmptyInterruptEnable | kLPUART_TransmissionCompleteInterruptEnable | kLPUART_RxDataRegFullInterruptEnable | kLPUART_RxOverrunInterruptEnable);
+  /* Enable interrupt LPUART0_IRQn request in the NVIC */
+  EnableIRQ(LPUART_1_SERIAL_RX_TX_IRQN);
 }
 
 /***********************************************************************************************************************

@@ -8,17 +8,17 @@
 #include "tools.h"
 
 
-int mySoftwareReset(void) {
-
-   SYSTEM.PRCR.WORD = 0xA502;  /* Enable writing to the Software Reset */
-
-   SYSTEM.SWRR = 0xA501;            /* Software Reset */
-
-   SYSTEM.PRCR.WORD = 0xA500;  /* Disable writing to the Software Reset */
-
-   return 0;
-
-}
+//int mySoftwareReset(void) {
+//
+//   SYSTEM.PRCR.WORD = 0xA502;  /* Enable writing to the Software Reset */
+//
+//   SYSTEM.SWRR = 0xA501;            /* Software Reset */
+//
+//   SYSTEM.PRCR.WORD = 0xA500;  /* Disable writing to the Software Reset */
+//
+//   return 0;
+//
+//}
 
 void tools_softDelay(uint32_t ms)
 {

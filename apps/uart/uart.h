@@ -34,9 +34,8 @@
 #include "config.h"
 #include <stdio.h>
 #include <string.h>
-#include "r_cg_macrodriver.h"
-#include "Config_SCI1.h"
-#include "adc.h"
+#include "fsl_lpuart.h"
+//#include "adc.h"
 /******************************************************************************
 * Constants
 ******************************************************************************/

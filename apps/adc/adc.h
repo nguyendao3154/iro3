@@ -31,9 +31,7 @@
 
 
 #include <config.h>
-#include "r_cg_s12ad.h"
 #include <queue.h>
-#include "r_cg_userdefine.h"
 #include "flash_app.h"
 #include "uart.h"
 /******************************************************************************
