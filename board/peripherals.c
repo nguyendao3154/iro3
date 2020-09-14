@@ -111,12 +111,66 @@ void LPUART_1_init(void) {
 }
 
 /***********************************************************************************************************************
+ * LPTMR_1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'LPTMR_1'
+- type: 'lptmr'
+- mode: 'LPTMR_GENERAL'
+- type_id: 'lptmr_2eeab91a1a42f8238f9ac768f18c65ae'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'LPTMR0'
+- config_sets:
+  - fsl_lptmr:
+    - enableInterrupt: 'true'
+    - interrupt:
+      - IRQn: 'PWT_LPTMR0_IRQn'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+    - lptmr_config:
+      - timerMode: 'kLPTMR_TimerModeTimeCounter'
+      - pinSelect: 'ALT.0'
+      - pinPolarity: 'kLPTMR_PinPolarityActiveHigh'
+      - enableFreeRunning: 'false'
+      - bypassPrescaler: 'true'
+      - prescalerClockSource: 'kLPTMR_PrescalerClock_1'
+      - clockSource: 'BOARD_BootClockRUN'
+      - value: 'kLPTMR_Prescale_Glitch_0'
+      - timerPeriod: '200 us'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const lptmr_config_t LPTMR_1_config = {
+  .timerMode = kLPTMR_TimerModeTimeCounter,
+  .pinSelect = kLPTMR_PinSelectInput_0,
+  .pinPolarity = kLPTMR_PinPolarityActiveHigh,
+  .enableFreeRunning = false,
+  .bypassPrescaler = true,
+  .prescalerClockSource = kLPTMR_PrescalerClock_1,
+  .value = kLPTMR_Prescale_Glitch_0
+};
+
+void LPTMR_1_init(void) {
+  /* Initialize the LPTMR */
+  LPTMR_Init(LPTMR_1_PERIPHERAL, &LPTMR_1_config);
+  /* Set LPTMR period to 200us */
+  LPTMR_SetTimerPeriod(LPTMR_1_PERIPHERAL, LPTMR_1_TICKS);
+  /* Configure timer interrupt */
+  LPTMR_EnableInterrupts(LPTMR_1_PERIPHERAL, kLPTMR_TimerInterruptEnable);
+  /* Enable interrupt PWT_LPTMR0_IRQn request in the NVIC */
+  EnableIRQ(PWT_LPTMR0_IRQn);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
 {
   /* Initialize components */
   LPUART_1_init();
+  LPTMR_1_init();
 }
 
 /***********************************************************************************************************************
