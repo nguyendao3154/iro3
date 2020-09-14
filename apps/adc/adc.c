@@ -24,8 +24,7 @@
 
 
 #include <adc.h>
-#include <Config_S12AD0.h>
-#include <rx130/r_flash_rx130.h>
+#include "fsl_adc12.h"
 
 #include "stdbool.h"
 #include "stdint.h"

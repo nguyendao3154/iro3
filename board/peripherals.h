@@ -13,6 +13,7 @@
 #include "fsl_lpuart.h"
 #include "fsl_clock.h"
 #include "fsl_lptmr.h"
+#include "fsl_ftm.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -45,12 +46,21 @@ extern "C" {
 #define LPTMR_1_IRQN PWT_LPTMR0_IRQn
 /* LPTMR_1 interrupt handler identifier. */
 #define LPTMR_1_IRQHANDLER PWT_LPTMR0_IRQHandler
+/* Definition of peripheral ID */
+#define FTM_1_PERIPHERAL FTM0
+/* Definition of the clock source frequency */
+#define FTM_1_CLOCK_SOURCE 48000000UL
+/* FTM_1 interrupt vector ID (number). */
+#define FTM_1_IRQN FTM0_IRQn
+/* FTM_1 interrupt handler identifier. */
+#define FTM_1_IRQHANDLER FTM0_IRQHandler
 
 /***********************************************************************************************************************
  * Global variables
  **********************************************************************************************************************/
 extern const lpuart_config_t LPUART_1_config;
 extern const lptmr_config_t LPTMR_1_config;
+extern const ftm_config_t FTM_1_config;
 
 /***********************************************************************************************************************
  * Initialization functions

@@ -58,6 +58,10 @@
 #define PORT_AP_CAO		GPIOE
 #define PIN_AP_CAO 		0U
 
+#define PORT_PULSE      GPIOE
+#define PIN_PULSE       2U
+
+
 #define PORT_DK_BOM     GPIOA
 #define PIN_DK_BOM 		0U
 #define PORT_VAN_XA     GPIOE
@@ -66,6 +70,9 @@
 // action define
 #define CHECK_CO_AP_THAP 	(GPIO_PinRead(PORT_AP_THAP, PIN_AP_THAP)== 1U)
 #define CHECK_CO_AP_CAO 	(GPIO_PinRead(PORT_AP_CAO, PIN_AP_CAO)== 1U)
+
+#define RISE_PULSE          GPIO_PortSet(PORT_PULSE, PIN_PULSE)
+#define FALL_PULSE          GPIO_PortClear(PORT_PULSE, PIN_PULSE)
 
 #define TURN_ON_PUMP 		GPIO_PortSet(PORT_DK_BOM, PIN_DK_BOM)
 #define TURN_OFF_PUMP 		GPIO_PortClear(PORT_DK_BOM, PIN_DK_BOM)

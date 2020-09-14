@@ -5,11 +5,18 @@
 #include "MKE16Z4.h"
 #include "fsl_lptmr.h"
 #include "display.h"
+#include "timer.h"
+#include "gpio.h"
 
 volatile uint32_t g_sysTime = 0;
 volatile uint8_t g_run1msFlag = 0;
 volatile uint8_t g_run200usFlag = 0;
 volatile uint8_t s_200usTick = 0;
+
+volatile uint8_t g_pwm_timer;
+extern volatile uint8_t g_adc_flag;
+volatile uint8_t g_pwm_value = 0;
+volatile uint8_t cnt = 0;
 
 void PWT_LPTMR0_IRQHandler(void)
 {
@@ -25,4 +32,31 @@ void PWT_LPTMR0_IRQHandler(void)
 	Led7seg_scanLed();
     __DSB();
     __ISB();
+}
+
+void FTM_1_IRQHANDLER(void)
+{
+    if(0U == g_adc_flag)
+	{
+		uint8_t check = (cnt++) % 4;
+		switch (check) {
+			case 0:
+				RISE_PULSE;
+				g_pwm_value = 1;
+				break;
+			case 1:
+				R_Config_S12AD0_Start();
+				break;
+			case 2:
+				FALL_PULSE;
+				g_pwm_value = 0;
+				break;
+			case 3:
+				R_Config_S12AD0_Start();
+				break;
+			default:
+				break;
+		}
+	}
+    TIMER_SystemTickEvent();
 }
