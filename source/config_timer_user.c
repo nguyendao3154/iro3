@@ -7,18 +7,20 @@
 #include "display.h"
 #include "timer.h"
 #include "gpio.h"
+#include "config_timer_user.h"
+#include "adc.h"
 
-volatile uint32_t g_sysTime = 0;
-volatile uint8_t g_run1msFlag = 0;
-volatile uint8_t g_run200usFlag = 0;
-volatile uint8_t s_200usTick = 0;
-
+volatile uint32_t g_sysTime;
+extern volatile uint8_t g_run1msFlag;
+extern volatile uint8_t g_run200usFlag;
+volatile uint8_t s_200usTick;
+uint8_t abc;
 volatile uint8_t g_pwm_timer;
-extern volatile uint8_t g_adc_flag;
-volatile uint8_t g_pwm_value = 0;
-volatile uint8_t cnt = 0;
+//extern volatile uint8_t g_adc_flag;
+//volatile uint8_t g_pwm_value = 0;
+uint8_t cnt = 0;
 
-void PWT_LPTMR0_IRQHandler(void)
+void LPTMR_1_IRQHANDLER(void)
 {
     LPTMR_ClearStatusFlags(LPTMR0, kLPTMR_TimerCompareFlag);
     /* Start user code for r_Config_CMT1_cmi1_interrupt. Do not edit comment generated here */
@@ -45,14 +47,14 @@ void FTM_1_IRQHANDLER(void)
 				g_pwm_value = 1;
 				break;
 			case 1:
-				R_Config_S12AD0_Start();
+				 ADC12_SetChannelConfig(ADC12_1_PERIPHERAL, 0U, &ADC12_1_channelsConfig[0]);
 				break;
 			case 2:
 				FALL_PULSE;
 				g_pwm_value = 0;
 				break;
 			case 3:
-				R_Config_S12AD0_Start();
+				ADC12_SetChannelConfig(ADC12_1_PERIPHERAL, 0U, &ADC12_1_channelsConfig[0]);
 				break;
 			default:
 				break;

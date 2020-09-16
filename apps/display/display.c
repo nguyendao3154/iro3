@@ -136,14 +136,14 @@ void Display_showStart()
 	for(uint8_t i = 0; i< 8; i++)
 	{
 		Led7seg_setAllLedCode(~(1<<i));
-		Led_turnOffAllLedKey();
+
 		if(i<4)
 		{
-			Led_SetLedKeyState(i,LED_KEY_COLLOR_GREEN,LED_STATE_ON);
+
 		}
 		else
 		{
-			Led_SetLedKeyState(i-4,LED_KEY_COLLOR_RED,LED_STATE_ON);
+
 		}
 		Led_switchMachineStateLed(i%3);
 		if(i<2)
@@ -161,17 +161,17 @@ void Display_showStart()
 	{
 		Led7seg_OnAllSegInLed(i);
 		if(i%2 == 0){
-			Led_turnAllLedKey(LED_KEY_COLLOR_GREEN);
+
 			Led_turnAllLedMachineState(LED_STATE_ON);
 		}
 		else
 		{
-			Led_turnAllLedKey(LED_KEY_COLLOR_RED);
+
 			Led_turnAllLedMachineState(LED_STATE_OFF);
 		}
 		tools_softDelay(500);
 	}
-	Led_turnOffAllLedKey();
+
 }
 void Display_showFilterTime(uint8_t filter)
 {

@@ -230,6 +230,80 @@ void FTM_1_init(void) {
 }
 
 /***********************************************************************************************************************
+ * ADC12_1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'ADC12_1'
+- type: 'adc12'
+- mode: 'ADC12'
+- type_id: 'adc12_5324d28dd0212c08055a9d9cd4317082'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'ADC0'
+- config_sets:
+  - fsl_adc12:
+    - enable_irq: 'true'
+    - adc_interrupt:
+      - IRQn: 'ADC0_IRQn'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+    - adc12_config:
+      - referenceVoltageSource: 'kADC12_ReferenceVoltageSourceVref'
+      - clockSource: 'kADC12_ClockSourceAlt0'
+      - clockSourceFreq: 'BOARD_BootClockRUN'
+      - clockDivider: 'kADC12_ClockDivider1'
+      - resolution: 'kADC12_Resolution12Bit'
+      - sampleClockCount: '13'
+      - enableContinuousConversion: 'false'
+    - adc12HardwareCompareConfig:
+      - hardwareCompareModeEnable: 'false'
+    - adc12_hardware_average_mode: 'kADC12_HardwareAverageDisabled'
+    - hardwareTrigger: 'false'
+    - doAutoCalibration: 'true'
+    - offset: '0'
+    - gain: '0'
+    - adc12_channels_config:
+      - 0:
+        - channelNumber: 'SE.1'
+        - enableInterruptOnConversionCompleted: 'true'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const adc12_config_t ADC12_1_config = {
+  .referenceVoltageSource = kADC12_ReferenceVoltageSourceVref,
+  .clockSource = kADC12_ClockSourceAlt0,
+  .clockDivider = kADC12_ClockDivider1,
+  .resolution = kADC12_Resolution12Bit,
+  .sampleClockCount = 13,
+  .enableContinuousConversion = false
+};
+adc12_channel_config_t ADC12_1_channelsConfig[1] = {
+  {
+    .channelNumber = 1U,
+    .enableInterruptOnConversionCompleted = true
+  }
+};
+const adc12_hardware_average_mode_t ADC12_1_hardwareAverageConfig = kADC12_HardwareAverageDisabled;
+
+void ADC12_1_init(void) {
+  /* Initialize ADC12 converter */
+  ADC12_Init(ADC12_1_PERIPHERAL, &ADC12_1_config);
+  /* Set to software trigger mode */
+  ADC12_EnableHardwareTrigger(ADC12_1_PERIPHERAL, false);
+  /* Configure hardware average mode */
+  ADC12_SetHardwareAverage(ADC12_1_PERIPHERAL, ADC12_1_hardwareAverageConfig);
+  /* Set the offset value for the conversion result */
+  ADC12_SetOffsetValue(ADC12_1_PERIPHERAL, (uint32_t) 0);
+  /* Set the gain value for the conversion result */
+  ADC12_SetGainValue(ADC12_1_PERIPHERAL, 0);
+  /* Perform auto calibration */
+  ADC12_DoAutoCalibration(ADC12_1_PERIPHERAL);
+  /* Enable interrupt ADC0_IRQn request in the NVIC */
+  EnableIRQ(ADC0_IRQn);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
@@ -238,6 +312,7 @@ void BOARD_InitPeripherals(void)
   LPUART_1_init();
   LPTMR_1_init();
   FTM_1_init();
+  ADC12_1_init();
 }
 
 /***********************************************************************************************************************

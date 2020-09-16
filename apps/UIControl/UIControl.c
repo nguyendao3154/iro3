@@ -294,12 +294,10 @@ void UIControl_setLockState(bool isLock)
 	s_isKeyBoardLock = isLock;
 	if(isLock)
 	{
-		Led_turnOffLedKey();
 		if(!ErrorCheck_haveError()) Led7_ReduceIntensity(true);
 		s_UIState = UI_STATE_DEFAULD;
 	}else
 	{
-		Led_turnOnLedKey();
 		Display_turnOffBlinkled();
 		Led7_ReduceIntensity(false);
 		s_UIState = UI_STATE_FILTER_1;

@@ -92,32 +92,7 @@ typedef enum
 * Global functions
 ******************************************************************************/
 
-/**
- * @brief set led key state
- *
- * @param ledName name of led
- * @param color which color you want to set
- * @param state on or off
- *
- * @return none
- */
-void Led_SetLedKeyState(LedKeyName_t ledName,LedKeyColor_t color, LedState_t state);
-/**
- * @brief turn on led key
- *
- * call when unlock the keyboard
- *
- * @return none
- */
-void Led_turnOnLedKey();
-/**
- * @brief turn off led key
- *
- * call when lock the keyboard
- *
- * @return none
- */
-void Led_turnOffLedKey();
+
 /**
  * @brief switch machine state led to new machineState
  *
@@ -139,10 +114,9 @@ void Led_turnOffMachineStateled();
  */
 void Led_turnOnMachineStateled();
 
-void Led_turnOnAll();
+
 void Led_turnAllLedMachineState(LedState_t state);
-void Led_turnAllLedKey(LedKeyColor_t color);
-void Led_turnOffAllLedKey();
+
 
 /******************************************************************************
 * Inline functions

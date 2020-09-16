@@ -24,7 +24,6 @@
 
 
 #include "led7seg.h"
-#include "r_gpio_rx_if.h"
 #include "adc.h"
 #include "filter_time.h"
 #include "timeCheck.h"
@@ -46,10 +45,10 @@
 const uint8_t LED7_CODE_START[] = {0xFE,};
 
 const uint8_t LED7_CODE[] = {0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xff,0x86};
-const GPIO_Type LED7_PORT[] = {GPIOD, GPIOC, GPIOB, GPIOB, GPIOE, GPIOC, GPIOB, GPIOE};
-const uint32_t LED7_PIN[] = {7U, 3U, 5U, 6U, 8U, 2U, 4U, 3U};
-const GPIO_Type LED7_PORT_DIGITS[] = {GPIOB, GPIOC, GPIOC, GPIOD, GPIO};
-const gpio_port_pin_t LED7_DIGITS[] = {3U, 0U, 1U,5U, 6U};
+GPIO_Type * LED7_PORT[] = {GPIOD_BASE,GPIOC_BASE,GPIOB_BASE,GPIOB_BASE,GPIOE_BASE,GPIOC_BASE,GPIOB_BASE,GPIOE_BASE};
+const uint32_t LED7_PIN[] = {7U,3U,5U,6U,8U,2U,4U,3U};
+const uint32_t LED7_DIGITS[] = {3U,0U,1U,5U,6U};
+GPIO_Type * LED7_PORT_DIGITS[] = {GPIOB_BASE,GPIOC_BASE,GPIOC_BASE,GPIOD_BASE,GPIOD_BASE};
 
 /******************************************************************************
 * Local types
@@ -122,9 +121,9 @@ void showDigitAtIndex(uint8_t digit,uint8_t index)
 	}
 	for(int i = 0; i<8;i++)
 	{
-		GPIO_PinWrite(LED7_PORT[i], (digit & (1<<i)) << LED7_PIN[i]);
+		GPIO_PinWrite(LED7_PORT[i], LED7_PIN[i], (digit & (1<<i)));
 	}
-	GPIO_PortClear(LED7_PORT_DIGITS[i], LED7_DIGITS[index]);
+	GPIO_PortClear(LED7_PORT_DIGITS[index], LED7_DIGITS[index]);
 }
 void turnOffAllLed()
 {

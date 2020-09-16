@@ -32,8 +32,9 @@
 #include "string.h"
 #include "user_config.h"
 #include "CurentData.h"
-
-//#include "Config_S12AD0.h"
+#include "fsl_adc12.h"
+#include "gpio.h"
+#include "peripherals.h"
 /******************************************************************************
 * External objects
 ******************************************************************************/
@@ -140,6 +141,10 @@ LOCAL void ADC_PushDataToQueue (int16_t data ,TDS_T* tds)
 		}
 }
 
+void ADC0_IRQHandler(void)
+{
+    g_adc_flag = 1U;
+}
 
 LOCAL void ADC_InitConfigFlash()
 {
@@ -195,14 +200,12 @@ LOCAL bool ADC_GetIndexCalibFromTds(TDS_E channel,uint16_t tds_value,uint8_t *in
  */
 PUBLIC void ADC_Init()
 {   
-	R_Config_S12AD0_Create();
 	s_tds_in.adc_sample = QUEUE_InitQueue(ADC_SAMPLE_QUEUE_SIZE,sizeof(int16_t));
 	s_tds_out.adc_sample = QUEUE_InitQueue(ADC_SAMPLE_QUEUE_SIZE,sizeof(int16_t));
 	ADC_InitConfigFlash();
 	s_200ms_cnt = 0;
-	PWM = 0;
+	FALL_PULSE;
 	g_adc_flag = 0U;
-	R_Config_S12AD0_Start();
 	while((QUEUE_QueueIsEmpty(s_tds_out.adc_sample))||((QUEUE_QueueIsEmpty(s_tds_in.adc_sample))))
 	{
     	if(g_adc_flag)
@@ -329,7 +332,7 @@ PUBLIC void   ADC_UpdateTds (uint8_t state)
 		s_tds_out.sum_adc_high = 0;
 		s_tds_out.sum_adc_low  = 0;
 	    //check h2o det
-		R_Config_S12AD0_Get_ValueResult(H20_CHANNEL_DETECT_1,&s_adc_h2o_det1);
+		// R_Config_S12AD0_Get_ValueResult(H20_CHANNEL_DETECT_1,&s_adc_h2o_det1);
 		if(s_adc_h2o_det1 < s_tds_calib_param.adc_h2o_det)
 		{
 			s_cnt_h2o_det1 ++;
@@ -345,7 +348,7 @@ PUBLIC void   ADC_UpdateTds (uint8_t state)
 			s_cnt_h2o_det1 = 0;
 		}
 		//check h2o det 2
-		R_Config_S12AD0_Get_ValueResult(H20_CHANNEL_DETECT_2,&s_adc_h2o_det2);
+		// R_Config_S12AD0_Get_ValueResult(H20_CHANNEL_DETECT_2,&s_adc_h2o_det2);
 		if(s_adc_h2o_det2 < s_tds_calib_param.adc_h2o_det)
 		{
 			s_cnt_h2o_det2 ++;
@@ -363,7 +366,11 @@ PUBLIC void   ADC_UpdateTds (uint8_t state)
 		goto end_function;
 	}
 //	R_Config_S12AD0_Get_ValueResult(TDS_IN_CHANNEL, &adc_result_tds_in);
-	R_Config_S12AD0_Get_ValueResult(TDS_OUT_CHANNEL,&adc_result_tds_out);
+	ADC12_SetChannelConfig(ADC12_1_PERIPHERAL, 0U, &ADC12_1_channelsConfig[0]);
+	while (!g_adc_flag)
+    	        {
+    	        }
+	adc_result_tds_out = ADC12_GetChannelConversionValue(ADC12_1_PERIPHERAL, 0U);
 
 // 0 với mạch test 1 với mạch cũ
 #ifdef HW_VER_214

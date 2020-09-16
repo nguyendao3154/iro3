@@ -23,35 +23,34 @@
 ******************************************************************************/
 
 #include "config.h"
-//#include "gpio.h"
-//#include "adc.h"
+#include "gpio.h"
+#include "adc.h"
 #include "display.h"
 //#include "touch_app.h"
 //#include "flash_app.h"
 //#include "filter_time.h"
-//#include "UIControl.h"
-//#include "pumpControl.h"
-//#include "timer.h"
+#include "UIControl.h"
+#include "pumpControl.h"
+#include "timer.h"
 #include "errorCheck.h"
-//#include "uart.h"
+#include "uart.h"
 //#include "filterExpire.h"
 #include <stdio.h>
 #include "board.h"
-#include "peripherals.h"
 #include "pin_mux.h"
 #include "clock_config.h"
 #include "MKE16Z4.h"
-
+#include "config_timer_user.h"
 
 
 /******************************************************************************
 * External objects
 ******************************************************************************/
-extern volatile uint8_t g_run200usFlag;
-extern volatile uint8_t g_run1msFlag;
-extern uint8_t g_adc_flag;
-extern bool g_disableLedKey;
-
+volatile uint8_t g_run200usFlag;
+volatile uint8_t g_run1msFlag;
+uint8_t g_adc_flag;
+bool g_disableLedKey;
+uint8_t abc;
 /******************************************************************************
 * Global variables
 ******************************************************************************/

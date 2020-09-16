@@ -38,6 +38,11 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="Peripheral" resourceId="ADC0" description="Peripheral ADC0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
@@ -49,6 +54,11 @@
                      </feature>
                   </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.gpio" description="Pins initialization requires the GPIO Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
+                     <feature name="enabled" evaluation="equal" configuration="core0">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="SWComponent" resourceId="platform.drivers.trgmux" description="Pins initialization requires the TRGMUX Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
                      </feature>
@@ -152,6 +162,14 @@
                         <pin_feature name="direction" value="OUTPUT"/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="ADC0" signal="SE, 1" pin_num="37" pin_signal="ADC0_SE1/ACMP0_IN1/TSI0_CH18/PTA1/FTM1_CH1/LPI2C0_SDAS/FTM1_QD_PHA/LPUART0_RTS/TRGMUX_OUT0"/>
+                  <pin peripheral="ADC0" signal="TRIGGER_COCO_FLAG, A" pin_num="1" pin_signal="TSI0_CH5/PTD1/FTM0_CH3/TRGMUX_OUT2"/>
+                  <pin peripheral="ADC0" signal="TRIGGER_COCO_FLAG, B" pin_num="2" pin_signal="TSI0_CH4/PTD0/FTM0_CH2/TRGMUX_OUT1"/>
+                  <pin peripheral="GPIOB" signal="GPIO, 2" pin_num="25" pin_signal="ADC0_SE6/TSI0_CH20/PTB2/FTM1_CH0/LPSPI0_SCK/FTM1_QD_PHB/TRGMUX_IN3">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
          </functions_list>
@@ -183,12 +201,14 @@
                   <clock_output id="Flash_clock.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO1KCLK.outFreq" value="1 kHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="128 kHz" locked="false" accuracy=""/>
+                  <clock_output id="PCC.PCC_ADC0_CLK.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="PCC.PCC_LPTMR0_CLK.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="PCC.PCC_LPUART0_CLK.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="SIRC_CLK.outFreq" value="8 MHz" locked="false" accuracy=""/>
                   <clock_output id="System_clock.outFreq" value="48 MHz" locked="false" accuracy=""/>
                </clock_outputs>
                <clock_settings>
+                  <setting id="PCC.PCC_ADC0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
                   <setting id="PCC.PCC_LPTMR0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
                   <setting id="PCC.PCC_LPUART0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
                   <setting id="SCG.FIRCDIV2.scale" value="2" locked="true"/>
@@ -239,6 +259,16 @@
                   <data type="Version">2.1.0</data>
                </feature>
             </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.adc12" description="ADC12 Driver not found in the toolchain/IDE project." problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.adc12" description="Unsupported version of the ADC12 Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">2.0.1</data>
+               </feature>
+            </dependency>
          </dependencies>
          <generated_project_files>
             <file path="board/peripherals.c" update_enabled="true"/>
@@ -275,6 +305,16 @@
                   <dependency resourceType="ClockOutput" resourceId="System_clock" description="System clock is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="frequency" evaluation="greaterThan">
                         <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="PCC.PCC_ADC0_CLK" description="ADC0 clock is inactive." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="ADC0.adc_se.1" description="Signal SE of the channel 1 of the peripheral ADC0 is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="">
+                        <data type="Boolean">true</data>
                      </feature>
                   </dependency>
                </dependencies>
@@ -390,6 +430,40 @@
                      </config_set>
                      <config_set name="ftm_edge_aligned_mode">
                         <array name="ftm_edge_aligned_channels_config"/>
+                     </config_set>
+                  </instance>
+                  <instance name="ADC12_1" type="adc12" type_id="adc12_5324d28dd0212c08055a9d9cd4317082" mode="ADC12" peripheral="ADC0" enabled="true">
+                     <config_set name="fsl_adc12">
+                        <setting name="enable_irq" value="true"/>
+                        <struct name="adc_interrupt">
+                           <setting name="IRQn" value="ADC0_IRQn"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="priority" value="0"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
+                        <struct name="adc12_config">
+                           <setting name="referenceVoltageSource" value="kADC12_ReferenceVoltageSourceVref"/>
+                           <setting name="clockSource" value="kADC12_ClockSourceAlt0"/>
+                           <setting name="clockSourceFreq" value="BOARD_BootClockRUN"/>
+                           <setting name="clockDivider" value="kADC12_ClockDivider1"/>
+                           <setting name="resolution" value="kADC12_Resolution12Bit"/>
+                           <setting name="sampleClockCount" value="13"/>
+                           <setting name="enableContinuousConversion" value="false"/>
+                        </struct>
+                        <struct name="adc12HardwareCompareConfig">
+                           <setting name="hardwareCompareModeEnable" value="false"/>
+                        </struct>
+                        <setting name="adc12_hardware_average_mode" value="kADC12_HardwareAverageDisabled"/>
+                        <setting name="hardwareTrigger" value="false"/>
+                        <setting name="doAutoCalibration" value="true"/>
+                        <setting name="offset" value="0"/>
+                        <setting name="gain" value="0"/>
+                        <array name="adc12_channels_config">
+                           <struct name="0">
+                              <setting name="channelNumber" value="SE.1"/>
+                              <setting name="enableInterruptOnConversionCompleted" value="true"/>
+                           </struct>
+                        </array>
                      </config_set>
                   </instance>
                </instances>

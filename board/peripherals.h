@@ -14,6 +14,7 @@
 #include "fsl_clock.h"
 #include "fsl_lptmr.h"
 #include "fsl_ftm.h"
+#include "fsl_adc12.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -54,6 +55,12 @@ extern "C" {
 #define FTM_1_IRQN FTM0_IRQn
 /* FTM_1 interrupt handler identifier. */
 #define FTM_1_IRQHANDLER FTM0_IRQHandler
+/* Alias for ADC0 peripheral */
+#define ADC12_1_PERIPHERAL ADC0
+/* ADC12_1 interrupt vector ID (number). */
+#define ADC12_1_IRQN ADC0_IRQn
+/* ADC12_1 interrupt handler identifier. */
+#define ADC12_1_IRQHANDLER ADC0_IRQHandler
 
 /***********************************************************************************************************************
  * Global variables
@@ -61,6 +68,9 @@ extern "C" {
 extern const lpuart_config_t LPUART_1_config;
 extern const lptmr_config_t LPTMR_1_config;
 extern const ftm_config_t FTM_1_config;
+extern const adc12_config_t ADC12_1_config;
+extern adc12_channel_config_t ADC12_1_channelsConfig[1];
+extern const adc12_hardware_average_mode_t ADC12_1_hardwareAverageConfig;
 
 /***********************************************************************************************************************
  * Initialization functions

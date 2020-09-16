@@ -19,6 +19,7 @@ processor_version: 6.0.1
 #include "fsl_common.h"
 #include "fsl_port.h"
 #include "fsl_gpio.h"
+#include "fsl_trgmux.h"
 #include "pin_mux.h"
 
 /* FUNCTION ************************************************************************************************************
@@ -59,6 +60,10 @@ BOARD_InitPins:
   - {pin_num: '6', peripheral: GPIOE, signal: 'GPIO, 4', pin_signal: TSI0_CH1/PTE4/BUSOUT/CAN0_RX/EWM_OUT_b, direction: OUTPUT}
   - {pin_num: '32', peripheral: GPIOD, signal: 'GPIO, 4', pin_signal: PTD4/FTM0_FLT3, direction: OUTPUT}
   - {pin_num: '41', peripheral: GPIOE, signal: 'GPIO, 6', pin_signal: PTE6/LPSPI0_PCS2/LPUART1_RTS, direction: OUTPUT}
+  - {pin_num: '37', peripheral: ADC0, signal: 'SE, 1', pin_signal: ADC0_SE1/ACMP0_IN1/TSI0_CH18/PTA1/FTM1_CH1/LPI2C0_SDAS/FTM1_QD_PHA/LPUART0_RTS/TRGMUX_OUT0}
+  - {pin_num: '1', peripheral: ADC0, signal: 'TRIGGER_COCO_FLAG, A', pin_signal: TSI0_CH5/PTD1/FTM0_CH3/TRGMUX_OUT2}
+  - {pin_num: '2', peripheral: ADC0, signal: 'TRIGGER_COCO_FLAG, B', pin_signal: TSI0_CH4/PTD0/FTM0_CH2/TRGMUX_OUT1}
+  - {pin_num: '25', peripheral: GPIOB, signal: 'GPIO, 2', pin_signal: ADC0_SE6/TSI0_CH20/PTB2/FTM1_CH0/LPSPI0_SCK/FTM1_QD_PHB/TRGMUX_IN3, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -72,6 +77,8 @@ BOARD_InitPins:
 void BOARD_InitPins(void)
 {
     /* Clock Gate Control: Clock enabled. The current clock selection and divider options are locked. */
+    CLOCK_EnableClock(kCLOCK_PortA);
+    /* Clock Gate Control: Clock enabled. The current clock selection and divider options are locked. */
     CLOCK_EnableClock(kCLOCK_PortB);
     /* Clock Gate Control: Clock enabled. The current clock selection and divider options are locked. */
     CLOCK_EnableClock(kCLOCK_PortC);
@@ -79,6 +86,13 @@ void BOARD_InitPins(void)
     CLOCK_EnableClock(kCLOCK_PortD);
     /* Clock Gate Control: Clock enabled. The current clock selection and divider options are locked. */
     CLOCK_EnableClock(kCLOCK_PortE);
+
+    gpio_pin_config_t gpiob_pin25_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB2 (pin 25)  */
+    GPIO_PinInit(GPIOB, 2U, &gpiob_pin25_config);
 
     gpio_pin_config_t gpiob_pin24_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -213,11 +227,17 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PTE11 (pin 3)  */
     GPIO_PinInit(GPIOE, 11U, &gpioe_pin3_config);
 
+    /* PORTA1 (pin 37) is configured as ADC0_SE1 */
+    PORT_SetPinMux(PORTA, 1U, kPORT_PinDisabledOrAnalog);
+
     /* PORTB0 (pin 27) is configured as LPUART0_RX */
     PORT_SetPinMux(PORTB, 0U, kPORT_MuxAlt2);
 
     /* PORTB1 (pin 26) is configured as LPUART0_TX */
     PORT_SetPinMux(PORTB, 1U, kPORT_MuxAlt2);
+
+    /* PORTB2 (pin 25) is configured as PTB2 */
+    PORT_SetPinMux(PORTB, 2U, kPORT_MuxAsGpio);
 
     /* PORTB3 (pin 24) is configured as PTB3 */
     PORT_SetPinMux(PORTB, 3U, kPORT_MuxAsGpio);
@@ -242,6 +262,12 @@ void BOARD_InitPins(void)
 
     /* PORTC3 (pin 17) is configured as PTC3 */
     PORT_SetPinMux(PORTC, 3U, kPORT_MuxAsGpio);
+
+    /* PORTD0 (pin 2) is configured as TRGMUX_OUT1 */
+    PORT_SetPinMux(PORTD, 0U, kPORT_MuxAlt7);
+
+    /* PORTD1 (pin 1) is configured as TRGMUX_OUT2 */
+    PORT_SetPinMux(PORTD, 1U, kPORT_MuxAlt7);
 
     /* PORTD4 (pin 32) is configured as PTD4 */
     PORT_SetPinMux(PORTD, 4U, kPORT_MuxAsGpio);
@@ -275,6 +301,10 @@ void BOARD_InitPins(void)
 
     /* PORTE8 (pin 14) is configured as PTE8 */
     PORT_SetPinMux(PORTE, 8U, kPORT_MuxAsGpio);
+    /* ADC0 COCOB is selected as EXTOUT0 device trigger input 1 */
+    TRGMUX_SetTriggerSource(TRGMUX0, kTRGMUX_ExtOut0_3, kTRGMUX_TriggerInput1, kTRGMUX_SourceAdc0CocoB);
+    /* ADC0 COCOA is selected as EXTOUT0 device trigger input 2 */
+    TRGMUX_SetTriggerSource(TRGMUX0, kTRGMUX_ExtOut0_3, kTRGMUX_TriggerInput2, kTRGMUX_SourceAdc0CocoA);
 }
 /***********************************************************************************************************************
  * EOF

@@ -40,11 +40,8 @@ bool g_disableLedKey = false;
 * Constants and macros
 ******************************************************************************/
 
-
-
-const gpio_port_pin_t LED_KEY_RED_PIN[] = {GPIO_PORT_B_PIN_7,GPIO_PORT_C_PIN_3,GPIO_PORT_C_PIN_6,GPIO_PORT_5_PIN_4};
-const gpio_port_pin_t LED_KEY_GREEN_PIN[] = {GPIO_PORT_C_PIN_2,GPIO_PORT_C_PIN_5,GPIO_PORT_C_PIN_7,GPIO_PORT_5_PIN_5};
-const gpio_port_pin_t LED_MACHINE_STATE_PIN[LED_MACHINE_STATE_NUM] = {LED_MACHINE_STATE_FILTER ,LED_MACHINE_STATE_TDS_IN,LED_MACHINE_STATE_TDS_OUT};
+GPIO_Type * LED_MACHINE_STATE_PORT[LED_MACHINE_STATE_NUM] = {LED_MACHINE_STATE_FILTER_PORT, LED_MACHINE_STATE_TDS_OUT_PORT};
+const uint32_t LED_MACHINE_STATE_PIN[LED_MACHINE_STATE_NUM] = {LED_MACHINE_STATE_FILTER_PIN ,LED_MACHINE_STATE_TDS_OUT_PIN};
 
 /******************************************************************************
 * Local types
@@ -91,63 +88,22 @@ MachineStateLed_t s_currentMachineState;
  * @return descrition for the function return value
  */
 
-void Led_SetLedKeyState(LedKeyName_t ledName,LedKeyColor_t color, LedState_t state)
-{
-	if(g_disableLedKey) return;
-	if(color == LED_KEY_COLLOR_GREEN)
-	{
-		R_GPIO_PinWrite(LED_KEY_GREEN_PIN[ledName],state == LED_STATE_ON? GPIO_LEVEL_LOW:GPIO_LEVEL_HIGH);
-	}else
-	{
-		R_GPIO_PinWrite(LED_KEY_RED_PIN[ledName],state == LED_STATE_ON? GPIO_LEVEL_LOW:GPIO_LEVEL_HIGH);
-	}
-}
-
-void Led_turnOnLedKey()
-{
-	if(g_disableLedKey) return;
-	for(uint8_t i = 0; i< PIN_KEY_NUM; i++)
-	{
-		R_GPIO_PinWrite(LED_KEY_GREEN_PIN[i],GPIO_LEVEL_LOW);
-	}
-}
-void Led_turnOffLedKey()
-{
-	if(g_disableLedKey) return;
-	for(uint8_t i = 0; i< PIN_KEY_NUM; i++)
-	{
-		R_GPIO_PinWrite(LED_KEY_GREEN_PIN[i],GPIO_LEVEL_HIGH);
-	}
-}
-
-void Led_turnOffAllLedKey()
-{
-	if(g_disableLedKey) return;
-	for(uint8_t i = 0; i< PIN_KEY_NUM; i++)
-	{
-		R_GPIO_PinWrite(LED_KEY_GREEN_PIN[i],GPIO_LEVEL_HIGH);
-	}
-	for(uint8_t i = 0; i< PIN_KEY_NUM; i++)
-	{
-		R_GPIO_PinWrite(LED_KEY_RED_PIN[i],GPIO_LEVEL_HIGH);
-	}
-}
 
 void Led_switchMachineStateLed(MachineStateLed_t machineState)
 {
 	s_currentMachineState = machineState;
 	uint8_t i;
 	for ( i = 0;  i < LED_MACHINE_STATE_NUM; ++ i) {
-		R_GPIO_PinWrite(LED_MACHINE_STATE_PIN[i], GPIO_LEVEL_HIGH);
+		GPIO_PortSet(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i]);
 	}
-	R_GPIO_PinWrite(LED_MACHINE_STATE_PIN[machineState], GPIO_LEVEL_LOW);
+	GPIO_PortClear(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i]);
 }
 
 void Led_turnOffMachineStateled()
 {
 	uint8_t i;
 	for ( i = 0;  i < LED_MACHINE_STATE_NUM; ++ i) {
-		R_GPIO_PinWrite(LED_MACHINE_STATE_PIN[i], GPIO_LEVEL_HIGH);
+		GPIO_PortSet(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i]);
 	}
 }
 
@@ -158,34 +114,21 @@ void Led_turnOnMachineStateled()
 
 void Led_turnOnAll()
 {
-	Led_turnOnLedKey();
+
 	for (uint8_t i = 0;  i < LED_MACHINE_STATE_NUM; ++ i) {
-		R_GPIO_PinWrite(LED_MACHINE_STATE_PIN[i], GPIO_LEVEL_LOW);
+		GPIO_PortClear(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i]);
 	}
 }
 
 void Led_turnAllLedMachineState(LedState_t state)
 {
-	gpio_level_t gpioLevel;
+	uint8_t gpioLevel;
 	if(state == LED_STATE_OFF)
-		gpioLevel = GPIO_LEVEL_HIGH;
+		gpioLevel = 1U;
 	else
-		gpioLevel = GPIO_LEVEL_LOW;
+		gpioLevel = 0U;
 	for (uint8_t i = 0;  i < LED_MACHINE_STATE_NUM; ++ i) {
-		R_GPIO_PinWrite(LED_MACHINE_STATE_PIN[i], gpioLevel);
+		GPIO_PinWrite(LED_MACHINE_STATE_PORT[i],LED_MACHINE_STATE_PIN[i], gpioLevel);
 	}
 }
-void Led_turnAllLedKey(LedKeyColor_t color)
-{
-	if(g_disableLedKey) return;
-	if(color == LED_KEY_COLLOR_RED)
-		for (uint8_t i = 0;  i < 4; ++ i) {
-			R_GPIO_PinWrite(LED_KEY_RED_PIN[i], GPIO_LEVEL_LOW);
-			R_GPIO_PinWrite(LED_KEY_GREEN_PIN[i], GPIO_LEVEL_HIGH);
-		}
-	else if(color == LED_KEY_COLLOR_GREEN)
-		for (uint8_t i = 0;  i < 4; ++ i) {
-			R_GPIO_PinWrite(LED_KEY_GREEN_PIN[i], GPIO_LEVEL_LOW);
-			R_GPIO_PinWrite(LED_KEY_RED_PIN[i], GPIO_LEVEL_HIGH);
-		}
-}
+
