@@ -57,7 +57,7 @@ instance:
     - lpuartConfig:
       - clockSource: 'LpuartClock'
       - lpuartSrcClkFreq: 'BOARD_BootClockRUN'
-      - baudRate_Bps: '19200'
+      - baudRate_Bps: '115200'
       - parityMode: 'kLPUART_ParityDisabled'
       - dataBitsCount: 'kLPUART_EightDataBits'
       - isMsb: 'false'
@@ -72,7 +72,7 @@ instance:
       - rxIdleConfig: 'kLPUART_IdleCharacter1'
       - enableTx: 'true'
       - enableRx: 'true'
-    - quick_selection: 'QuickSelection4'
+    - quick_selection: 'QuickSelection1'
   - interruptsCfg:
     - interrupts: 'kLPUART_TxDataRegEmptyInterruptEnable kLPUART_TransmissionCompleteInterruptEnable kLPUART_RxDataRegFullInterruptEnable kLPUART_RxOverrunInterruptEnable'
     - interrupt_vectors:
@@ -86,7 +86,7 @@ instance:
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const lpuart_config_t LPUART_1_config = {
-  .baudRate_Bps = 19200,
+  .baudRate_Bps = 115200,
   .parityMode = kLPUART_ParityDisabled,
   .dataBitsCount = kLPUART_EightDataBits,
   .isMsb = false,
@@ -135,8 +135,8 @@ instance:
       - pinSelect: 'ALT.0'
       - pinPolarity: 'kLPTMR_PinPolarityActiveHigh'
       - enableFreeRunning: 'false'
-      - bypassPrescaler: 'true'
-      - prescalerClockSource: 'kLPTMR_PrescalerClock_1'
+      - bypassPrescaler: 'false'
+      - prescalerClockSource: 'kLPTMR_PrescalerClock_0'
       - clockSource: 'BOARD_BootClockRUN'
       - value: 'kLPTMR_Prescale_Glitch_0'
       - timerPeriod: '200 us'
@@ -147,8 +147,8 @@ const lptmr_config_t LPTMR_1_config = {
   .pinSelect = kLPTMR_PinSelectInput_0,
   .pinPolarity = kLPTMR_PinPolarityActiveHigh,
   .enableFreeRunning = false,
-  .bypassPrescaler = true,
-  .prescalerClockSource = kLPTMR_PrescalerClock_1,
+  .bypassPrescaler = false,
+  .prescalerClockSource = kLPTMR_PrescalerClock_0,
   .value = kLPTMR_Prescale_Glitch_0
 };
 
@@ -309,10 +309,10 @@ void ADC12_1_init(void) {
 void BOARD_InitPeripherals(void)
 {
   /* Initialize components */
-  LPUART_1_init();
+//  LPUART_1_init();
   LPTMR_1_init();
   FTM_1_init();
-  ADC12_1_init();
+//  ADC12_1_init();
 }
 
 /***********************************************************************************************************************

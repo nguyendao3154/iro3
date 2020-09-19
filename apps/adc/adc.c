@@ -9,12 +9,12 @@
 * @file        adc.c
 *
 * @author    trongkn
-* 
+*
 * @version   1.0
-* 
-* @date      
-* 
-* @brief     
+*
+* @date
+*
+* @brief
 *
 *******************************************************************************
 *
@@ -141,23 +141,18 @@ LOCAL void ADC_PushDataToQueue (int16_t data ,TDS_T* tds)
 		}
 }
 
-void ADC0_IRQHandler(void)
-{
-    g_adc_flag = 1U;
-}
-
 LOCAL void ADC_InitConfigFlash()
 {
-    bool readOk = flash_app_readData((uint8_t*)&s_tds_calib_param,TDS_PARAM_BLOCK,sizeof(s_tds_calib_param));
+//    bool readOk = flash_app_readData((uint8_t*)&s_tds_calib_param,TDS_PARAM_BLOCK,sizeof(s_tds_calib_param));
 
-    if(!readOk)
-    {
+    // if(!readOk)
+    // {
     	memcpy(&(s_tds_calib_param.tds_in),&TDS_IN_CONFIG_DEFAULD,sizeof(s_tds_calib_param.tds_in));
     	memcpy(&(s_tds_calib_param.tds_out),&TDS_OUT_CONFIG_DEFAULD,sizeof(s_tds_calib_param.tds_out));
     	s_tds_calib_param.tds_out_max    = TDS_OUT_MAX_DEFAULT;
     	s_tds_calib_param.adc_h2o_det = ADC_H2O_DET_DEFAULT;
-    	flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
-    }
+//    	flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
+    // }
 
 
 }
@@ -189,7 +184,7 @@ LOCAL bool ADC_GetIndexCalibFromTds(TDS_E channel,uint16_t tds_value,uint8_t *in
 ******************************************************************************/
 
 /**
- * @brief One line documentation 
+ * @brief One line documentation
  *
  * A more detailed documentation
  *
@@ -199,20 +194,22 @@ LOCAL bool ADC_GetIndexCalibFromTds(TDS_E channel,uint16_t tds_value,uint8_t *in
  * @return descrition for the function return value
  */
 PUBLIC void ADC_Init()
-{   
+{
+
 	s_tds_in.adc_sample = QUEUE_InitQueue(ADC_SAMPLE_QUEUE_SIZE,sizeof(int16_t));
 	s_tds_out.adc_sample = QUEUE_InitQueue(ADC_SAMPLE_QUEUE_SIZE,sizeof(int16_t));
 	ADC_InitConfigFlash();
+
 	s_200ms_cnt = 0;
 	FALL_PULSE;
 	g_adc_flag = 0U;
-	while((QUEUE_QueueIsEmpty(s_tds_out.adc_sample))||((QUEUE_QueueIsEmpty(s_tds_in.adc_sample))))
+	while((QUEUE_QueueIsEmpty(s_tds_out.adc_sample)))
 	{
     	if(g_adc_flag)
     	{
     		ADC_UpdateTds (0);
     	}
-
+//    	UART_UartPuts("a");
 	}
 	s_tds_out.tds_display = curentData_getLastTdsOut();
 
@@ -425,7 +422,7 @@ PUBLIC ERR_E ADC_CalibTdsValue(uint16_t tdsvalue,TDS_E channel)
 //			s_tds_calib_param.tds_out.adc_value[index] = current_adc_tds_out;
 			s_tds_calib_param.tds_in.adc_value[index] = s_tds_out.sma_tds_adc;
 		}
-		ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
+//		ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
 		f_ret = (ret == true)?OK:ERR;
 		return f_ret;
 	}
@@ -535,7 +532,7 @@ PUBLIC ERR_E ADC_CalibTdsValueFromUart(uint16_t tdsvalue,TDS_E channel,uint8_t i
 			s_tds_calib_param.tds_out.tds_value[index] = tdsvalue;
 			s_tds_calib_param.tds_out.adc_value[index] = (index == 0)?(s_tds_out.sma_tds_adc -10):s_tds_out.sma_tds_adc;
 		}
-		ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
+//		ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
 		f_ret = (ret == true)?OK:ERR;
 		return f_ret;
 	}
@@ -552,8 +549,8 @@ PUBLIC ERR_E ADC_WriteAdcFromUart(int* adcTable,TDS_E channel)
 			s_tds_calib_param.tds_out.adc_value[i] = (int16_t)adcTable[i];
 		}
 	}
-	flash_block_address_t block = TDS_PARAM_BLOCK;
-	ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, block, sizeof(s_tds_calib_param));
+//	flash_block_address_t block = TDS_PARAM_BLOCK;
+//	ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, block, sizeof(s_tds_calib_param));
 	f_ret = (ret == true)?OK:ERR;
 	return f_ret;
 }
@@ -569,8 +566,8 @@ PUBLIC ERR_E ADC_WriteTdsFromUart(int* tdsTable,TDS_E channel)
 			s_tds_calib_param.tds_out.tds_value[i] = (int16_t)tdsTable[i];
 		}
 	}
-	flash_block_address_t block = TDS_PARAM_BLOCK;
-	ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, block, sizeof(s_tds_calib_param));
+//	flash_block_address_t block = TDS_PARAM_BLOCK;
+//	ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, block, sizeof(s_tds_calib_param));
 	f_ret = (ret == true)?OK:ERR;
 	return f_ret;
 }

@@ -170,6 +170,11 @@
                         <pin_feature name="direction" value="OUTPUT"/>
                      </pin_features>
                   </pin>
+                  <pin peripheral="GPIOB" signal="GPIO, 7" pin_num="11" pin_signal="EXTAL/PTB7/LPI2C0_SCL">
+                     <pin_features>
+                        <pin_feature name="direction" value="OUTPUT"/>
+                     </pin_features>
+                  </pin>
                </pins>
             </function>
          </functions_list>
@@ -197,13 +202,13 @@
                <clock_outputs>
                   <clock_output id="Bus_clock.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="Core_clock.outFreq" value="48 MHz" locked="false" accuracy=""/>
-                  <clock_output id="FIRCDIV2_CLK.outFreq" value="24 MHz" locked="false" accuracy=""/>
+                  <clock_output id="FIRCDIV2_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
                   <clock_output id="Flash_clock.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO1KCLK.outFreq" value="1 kHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="128 kHz" locked="false" accuracy=""/>
-                  <clock_output id="PCC.PCC_ADC0_CLK.outFreq" value="24 MHz" locked="false" accuracy=""/>
-                  <clock_output id="PCC.PCC_LPTMR0_CLK.outFreq" value="24 MHz" locked="false" accuracy=""/>
-                  <clock_output id="PCC.PCC_LPUART0_CLK.outFreq" value="24 MHz" locked="false" accuracy=""/>
+                  <clock_output id="PCC.PCC_ADC0_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
+                  <clock_output id="PCC.PCC_LPTMR0_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
+                  <clock_output id="PCC.PCC_LPUART0_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
                   <clock_output id="SIRC_CLK.outFreq" value="8 MHz" locked="false" accuracy=""/>
                   <clock_output id="System_clock.outFreq" value="48 MHz" locked="false" accuracy=""/>
                </clock_outputs>
@@ -211,10 +216,11 @@
                   <setting id="PCC.PCC_ADC0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
                   <setting id="PCC.PCC_LPTMR0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
                   <setting id="PCC.PCC_LPUART0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
-                  <setting id="SCG.FIRCDIV2.scale" value="2" locked="true"/>
+                  <setting id="SCG.FIRCDIV2.scale" value="1" locked="true"/>
                   <setting id="SCG.SIRCDIV2.scale" value="0" locked="true"/>
                   <setting id="SCG.TRIMDIV.scale" value="4" locked="false"/>
                   <setting id="SCG_LPFLLCSR_LPFLLEN_CFG" value="Enabled" locked="false"/>
+                  <setting id="SCG_SOSCCSR_SOSCEN_CFG" value="Enabled" locked="false"/>
                </clock_settings>
                <called_from_default_init>true</called_from_default_init>
             </clock_configuration>
@@ -297,7 +303,7 @@
                         <data type="Boolean">true</data>
                      </feature>
                   </dependency>
-                  <dependency resourceType="ClockOutput" resourceId="LPO_clock" description="LPO clock is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
+                  <dependency resourceType="ClockOutput" resourceId="PCC.PCC_LPTMR0_CLK" description="LPTMR0 clock is inactive." problem_level="2" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="frequency" evaluation="greaterThan">
                         <data type="Frequency" unit="Hz">0</data>
                      </feature>
@@ -320,11 +326,11 @@
                </dependencies>
                <instances>
                   <instance name="LPUART_1" type="lpuart" type_id="lpuart_bebe3e12b6ec22bbd14199038f2bf459" mode="interrupts" peripheral="LPUART0" enabled="true">
-                     <config_set name="lpuartConfig_t" quick_selection="QuickSelection4">
+                     <config_set name="lpuartConfig_t" quick_selection="QuickSelection1">
                         <struct name="lpuartConfig">
                            <setting name="clockSource" value="LpuartClock"/>
                            <setting name="lpuartSrcClkFreq" value="BOARD_BootClockRUN"/>
-                           <setting name="baudRate_Bps" value="19200"/>
+                           <setting name="baudRate_Bps" value="115200"/>
                            <setting name="parityMode" value="kLPUART_ParityDisabled"/>
                            <setting name="dataBitsCount" value="kLPUART_EightDataBits"/>
                            <setting name="isMsb" value="false"/>
@@ -375,8 +381,8 @@
                            <setting name="pinSelect" value="ALT.0"/>
                            <setting name="pinPolarity" value="kLPTMR_PinPolarityActiveHigh"/>
                            <setting name="enableFreeRunning" value="false"/>
-                           <setting name="bypassPrescaler" value="true"/>
-                           <setting name="prescalerClockSource" value="kLPTMR_PrescalerClock_1"/>
+                           <setting name="bypassPrescaler" value="false"/>
+                           <setting name="prescalerClockSource" value="kLPTMR_PrescalerClock_0"/>
                            <setting name="clockSource" value="BOARD_BootClockRUN"/>
                            <setting name="value" value="kLPTMR_Prescale_Glitch_0"/>
                            <setting name="timerPeriod" value="200 us"/>

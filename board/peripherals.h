@@ -27,7 +27,7 @@ extern "C" {
 /* Definition of peripheral ID */
 #define LPUART_1_PERIPHERAL LPUART0
 /* Definition of the clock source frequency */
-#define LPUART_1_CLOCK_SOURCE 24000000UL
+#define LPUART_1_CLOCK_SOURCE 48000000UL
 /* LPUART_1 interrupt vector ID (number). */
 #define LPUART_1_SERIAL_RX_TX_IRQN LPUART0_IRQn
 /* LPUART_1 interrupt handler identifier. */
@@ -36,13 +36,13 @@ extern "C" {
 /* Definition of peripheral ID */
 #define LPTMR_1_PERIPHERAL LPTMR0
 /* Definition of the clock source frequency */
-#define LPTMR_1_CLK_FREQ 128000UL
+#define LPTMR_1_CLK_FREQ 48000000UL
 /* Definition of the prescaled clock source frequency */
-#define LPTMR_1_INPUT_FREQ 128000UL
+#define LPTMR_1_INPUT_FREQ 24000000UL
 /* Definition of the timer period in us */
-#define LPTMR_1_USEC_COUNT 203UL
+#define LPTMR_1_USEC_COUNT 200UL
 /* Definition of the timer period in number of ticks */
-#define LPTMR_1_TICKS 26UL
+#define LPTMR_1_TICKS 4800UL
 /* LPTMR_1 interrupt vector ID (number). */
 #define LPTMR_1_IRQN PWT_LPTMR0_IRQn
 /* LPTMR_1 interrupt handler identifier. */

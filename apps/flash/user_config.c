@@ -120,7 +120,7 @@ static const UserConfig_t USER_CONFIG_DEFAULD = {
 
 void user_config_updateToFlash()
 {
-	flash_app_writeBlock((uint8_t *)&g_userConfig, USER_CONFIG_BLOCK, sizeof(g_userConfig));
+//	flash_app_writeBlock((uint8_t *)&g_userConfig, USER_CONFIG_BLOCK, sizeof(g_userConfig));
 }
 
 /******************************************************************************
@@ -139,13 +139,13 @@ void user_config_updateToFlash()
  */
 void user_config_init()
 {
-    bool readOk = flash_app_readData((uint8_t*)&g_userConfig,USER_CONFIG_BLOCK,sizeof(g_userConfig));
+//    bool readOk = flash_app_readData((uint8_t*)&g_userConfig,USER_CONFIG_BLOCK,sizeof(g_userConfig));
 
-    if(!readOk)
-    {
+//    if(!readOk)
+//    {
     	memcpy(&g_userConfig,&USER_CONFIG_DEFAULD,sizeof(g_userConfig));
     	user_config_updateToFlash();
-    }
+//    }
 
 }
 

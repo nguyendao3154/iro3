@@ -27,6 +27,7 @@
 #include "adc.h"
 #include "filter_time.h"
 #include "timeCheck.h"
+#include "fsl_gpio.h"
 
 /******************************************************************************
 * External objects
@@ -47,8 +48,9 @@ const uint8_t LED7_CODE_START[] = {0xFE,};
 const uint8_t LED7_CODE[] = {0xc0,0xf9,0xa4,0xb0,0x99,0x92,0x82,0xf8,0x80,0x90,0xff,0x86};
 GPIO_Type * LED7_PORT[] = {GPIOD_BASE,GPIOC_BASE,GPIOB_BASE,GPIOB_BASE,GPIOE_BASE,GPIOC_BASE,GPIOB_BASE,GPIOE_BASE};
 const uint32_t LED7_PIN[] = {7U,3U,5U,6U,8U,2U,4U,3U};
-const uint32_t LED7_DIGITS[] = {3U,0U,1U,5U,6U};
-GPIO_Type * LED7_PORT_DIGITS[] = {GPIOB_BASE,GPIOC_BASE,GPIOC_BASE,GPIOD_BASE,GPIOD_BASE};
+const uint32_t LED7_DIGITS[] = {5U,1,0U,3U,7U};
+GPIO_Type * LED7_PORT_DIGITS[] = {GPIOD_BASE,GPIOC_BASE,GPIOC_BASE,GPIOB_BASE,GPIOB_BASE};
+
 
 /******************************************************************************
 * Local types

@@ -6,7 +6,7 @@
  */
 
 #include "tools.h"
-
+extern volatile uint32_t g_sysTime;
 
 //int mySoftwareReset(void) {
 //

@@ -26,6 +26,7 @@
 #include <uart.h>
 #include "tools.h"
 #include "gpio.h"
+#include "adc.h"
 
 /******************************************************************************
 * External objects
@@ -142,20 +143,7 @@ LOCAL const PARSE_PACKET_PROCESS_T packet_process_table[] =
 /******************************************************************************
 * Local functions
 ******************************************************************************/
-void LPUART_1_SERIAL_RX_TX_IRQHANDLER(void)
-{
-    /* If new data arrived. */
-    if ((kLPUART_RxDataRegFullFlag)&LPUART_GetStatusFlags(LPUART0))
-    {
 
-    }
-
-    /* Add for ARM errata 838869, affects Cortex-M4, Cortex-M4F Store immediate overlapping
-      exception return operation might vector to incorrect interrupt */
-#if defined __CORTEX_M && (__CORTEX_M == 4U)
-    __DSB();
-#endif
-}
 
 LOCAL void UART_Reply(uint8_t *data, uint8_t *msg_id, ERR_E err_code)
 {
@@ -322,7 +310,7 @@ LOCAL ERR_E UART_HandleCalibTds(uint8 *value, uint8 *out)
 
 LOCAL ERR_E UART_HandleReset(uint8 *value, uint8 *out)
 {
-    mySoftwareReset();
+//    mySoftwareReset();
     return OK;
 }
 
@@ -770,29 +758,20 @@ LOCAL ERR_E UART_HandleSetWaitTimeUpdateTds(uint8 *value, uint8 *out)
  */
 PUBLIC void UART_Init(void)
 {
-    //init UART here
-    const lpuart_config_t uart_config = {
-        .baudRate_Bps = 9600,
-        .parityMode = kLPUART_ParityDisabled,
-        .dataBitsCount = kLPUART_EightDataBits,
-        .isMsb = false,
-        .stopBitCount = kLPUART_OneStopBit,
-        .txFifoWatermark = 0,
-        .rxFifoWatermark = 1,
-        .enableRxRTS = false,
-        .enableTxCTS = false,
-        .txCtsSource = kLPUART_CtsSourcePin,
-        .txCtsConfig = kLPUART_CtsSampleAtStart,
-        .rxIdleType = kLPUART_IdleTypeStartBit,
-        .rxIdleConfig = kLPUART_IdleCharacter1,
-        .enableTx = true,
-        .enableRx = true
-    };
-    LPUART_Init(LPUART0, &uart_config, 24000000UL);
+
+	lpuart_config_t config;
+
+	    LPUART_GetDefaultConfig(&config);
+	    config.baudRate_Bps = 115200;
+	    config.enableTx     = true;
+	    config.enableRx     = true;
+
+	    LPUART_Init(LPUART0, &config, CLOCK_GetFreq(kCLOCK_ScgFircClk));
+
     sprintf(print_str, "UART init done\r\n");
     LPUART_WriteBlocking(LPUART0, (uint8_t *)print_str, (uint16_t)strlen(print_str) - 1);
-    LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
-    EnableIRQ(LPUART0_IRQn);
+//    LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
+//    EnableIRQ(LPUART0_IRQn);
 }
 
 /**
@@ -807,15 +786,18 @@ PUBLIC void UART_Init(void)
  */
 PUBLIC void UART_UartPuts(uint8_t *s)
 {
-    uint8_t buffer_size;
-    buffer_size = sprintf(print_str, "%s", s);
-
-    for (uint8_t index; index < buffer_size; index++)
-    {
-        LPUART_WriteByte(LPUART0, print_str[index]);
-        while (!(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)))
-            ;
-    }
+//    uint8_t buffer_size;
+//    buffer_size = sprintf(print_str, "%s", s);
+//
+//    for (uint8_t index; index < buffer_size; index++)
+//    {
+//        LPUART_WriteByte(LPUART0, print_str[index]);
+//        while (!(kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0)))
+//            ;
+//    }
+	uint8_t buffer_size;
+	buffer_size = sprintf(print_str, "%s", s);
+	LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
 }
 /**
  * @brief One line documentation
@@ -841,7 +823,7 @@ PUBLIC void UART_Process()
 {
     uint8_t data[300] = {0};
     uint16_t len = 0;
-    if (UART_IsDoneFrame())
+    if (kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0))
     {
         len = UART_ReadData(data, 300);
         UART_HandleProcess(data, len);

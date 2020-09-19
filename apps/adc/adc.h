@@ -32,7 +32,7 @@
 
 #include <config.h>
 #include <queue.h>
-#include "flash_app.h"
+// #include "flash_app.h"
 #include "uart.h"
 /******************************************************************************
 * Constants

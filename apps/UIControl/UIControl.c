@@ -230,7 +230,7 @@ void UIControl_btnHold_cb(ButtonId_t btn,uint32_t holdingTime)
 	}
 	else if((btn == BUTTON_ID_SELECT) && (holdingTime == HOLD_TIME3) && (s_UIState == UI_STATE_DEFAULD))
 	{
-		flash_app_factoryReset();
+//		flash_app_factoryReset();
 		s_needReset = true;
 		s_timeReset = g_sysTime + 500;
 		Buzzer_onInMs(300);
@@ -422,7 +422,7 @@ void UIControl_process()
 	fashChangeProcess();
 	if(s_needReset && (timeIsAfter(g_sysTime, s_timeReset)))
 	{
-		mySoftwareReset();
+//		mySoftwareReset();
 	}
 }
 

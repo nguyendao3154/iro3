@@ -46,11 +46,11 @@
 /******************************************************************************
 * Macros
 ******************************************************************************/
-#define FILLTER_TIME_BLOCK 		FLASH_DF_BLOCK_0
-#define USER_CONFIG_BLOCK 		FLASH_DF_BLOCK_1
-#define TDS_PARAM_BLOCK     	FLASH_DF_BLOCK_2
-#define FILLTER_EXPIRE_BLOCK 	FLASH_DF_BLOCK_3
-#define CURENT_DATA_BLOCK 		FLASH_DF_BLOCK_4
+//#define FILLTER_TIME_BLOCK 		FLASH_DF_BLOCK_0
+//#define USER_CONFIG_BLOCK 		FLASH_DF_BLOCK_1
+//#define TDS_PARAM_BLOCK     	FLASH_DF_BLOCK_2
+//#define FILLTER_EXPIRE_BLOCK 	FLASH_DF_BLOCK_3
+//#define CURENT_DATA_BLOCK 		FLASH_DF_BLOCK_4
 
 #define MAX_LEN_FLASH       (1024) //1Kb
 #define BYTE_SAVE_LEN      (2)
@@ -73,9 +73,9 @@ union data_len
 * Global functions
 ******************************************************************************/
 void flash_app_init();
-void flash_app_eraseBlock(flash_block_address_t blockAdress);
-bool flash_app_writeBlock(uint8_t * data, flash_block_address_t blockAdress,uint16_t dataSize);
-bool flash_app_readData(uint8* dataRead, flash_block_address_t blockAdress,uint16_t dataSize);
+//void flash_app_eraseBlock(flash_block_address_t blockAdress);
+//bool flash_app_writeBlock(uint8_t * data, flash_block_address_t blockAdress,uint16_t dataSize);
+//bool flash_app_readData(uint8* dataRead, flash_block_address_t blockAdress,uint16_t dataSize);
 void flash_app_factoryReset();
 
 /******************************************************************************

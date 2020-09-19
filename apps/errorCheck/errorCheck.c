@@ -25,14 +25,14 @@
 
 #include "errorCheck.h"
 #include "gpio.h"
-//#include "timeCheck.h"
+#include "timeCheck.h"
 #include "user_config.h"
-//#include "adc.h"
-//#include "filter_time.h"
-//#include "pumpControl.h"
-//#include "adc.h"
+#include "adc.h"
+#include "filter_time.h"
+#include "pumpControl.h"
+#include "adc.h"
 #include "display.h"
-//#include "filterExpire.h"
+#include "filterExpire.h"
 
 /******************************************************************************
 * External objects
@@ -242,24 +242,24 @@ void checkPumpRunTime()
  * nếu nước rò, 10s sau kiểm tra lại, vẫn rò thì báo lỗi.
  *
  * */
-//void checkH2ODet()
-//{
-//	static bool waterIsLeak = false;
-//	static uint32_t timeStartLeak = 0;
-//	if(ADC_GetH2oDet(H2O_1) && (!currentErrors[ERROR_TYPE_LEAK_WATER]))
-//	{
-//		if(!waterIsLeak)
-//		{
-//			waterIsLeak = true;
-//			timeStartLeak = g_sysTime;
-//		}
-//		if(waterIsLeak && (elapsedTime(g_sysTime, timeStartLeak) >= 10000))
-//		{
-//			pumpControl_turnOffAll();
-//			newErrorOccur(ERROR_TYPE_LEAK_WATER);
-//		}
-//	}
-//}
+void checkH2ODet()
+{
+	static bool waterIsLeak = false;
+	static uint32_t timeStartLeak = 0;
+	if(ADC_GetH2oDet(H2O_1) && (!currentErrors[ERROR_TYPE_LEAK_WATER]))
+	{
+		if(!waterIsLeak)
+		{
+			waterIsLeak = true;
+			timeStartLeak = g_sysTime;
+		}
+		if(waterIsLeak && (elapsedTime(g_sysTime, timeStartLeak) >= 10000))
+		{
+			pumpControl_turnOffAll();
+			newErrorOccur(ERROR_TYPE_LEAK_WATER);
+		}
+	}
+}
 /******************************************************************************
 * Global functions
 ******************************************************************************/
@@ -287,7 +287,7 @@ void ErrorCheck_process()
 	checkWaterIn();
 	checkPumpRunTime();
 #ifdef ENABLE_TDS_OUT
-	checkTdsLimit();
+//	checkTdsLimit();
 #endif
 	checkH2ODet();
 	if((lastError == true) && (ErrorCheck_haveError()== false))

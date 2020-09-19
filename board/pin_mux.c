@@ -64,6 +64,7 @@ BOARD_InitPins:
   - {pin_num: '1', peripheral: ADC0, signal: 'TRIGGER_COCO_FLAG, A', pin_signal: TSI0_CH5/PTD1/FTM0_CH3/TRGMUX_OUT2}
   - {pin_num: '2', peripheral: ADC0, signal: 'TRIGGER_COCO_FLAG, B', pin_signal: TSI0_CH4/PTD0/FTM0_CH2/TRGMUX_OUT1}
   - {pin_num: '25', peripheral: GPIOB, signal: 'GPIO, 2', pin_signal: ADC0_SE6/TSI0_CH20/PTB2/FTM1_CH0/LPSPI0_SCK/FTM1_QD_PHB/TRGMUX_IN3, direction: OUTPUT}
+  - {pin_num: '11', peripheral: GPIOB, signal: 'GPIO, 7', pin_signal: EXTAL/PTB7/LPI2C0_SCL, direction: OUTPUT}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -121,6 +122,13 @@ void BOARD_InitPins(void)
     };
     /* Initialize GPIO functionality on pin PTB6 (pin 12)  */
     GPIO_PinInit(GPIOB, 6U, &gpiob_pin12_config);
+
+    gpio_pin_config_t gpiob_pin11_config = {
+        .pinDirection = kGPIO_DigitalOutput,
+        .outputLogic = 0U
+    };
+    /* Initialize GPIO functionality on pin PTB7 (pin 11)  */
+    GPIO_PinInit(GPIOB, 7U, &gpiob_pin11_config);
 
     gpio_pin_config_t gpioc_pin23_config = {
         .pinDirection = kGPIO_DigitalOutput,
@@ -250,6 +258,9 @@ void BOARD_InitPins(void)
 
     /* PORTB6 (pin 12) is configured as PTB6 */
     PORT_SetPinMux(PORTB, 6U, kPORT_MuxAsGpio);
+
+    /* PORTB7 (pin 11) is configured as PTB7 */
+    PORT_SetPinMux(PORTB, 7U, kPORT_MuxAsGpio);
 
     /* PORTC0 (pin 23) is configured as PTC0 */
     PORT_SetPinMux(PORTC, 0U, kPORT_MuxAsGpio);
