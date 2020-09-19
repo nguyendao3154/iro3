@@ -25,7 +25,7 @@
 
 #include <adc.h>
 #include "fsl_adc12.h"
-
+#include "uart.h"
 #include "stdbool.h"
 #include "stdint.h"
 #include "stdio.h"
@@ -196,21 +196,25 @@ LOCAL bool ADC_GetIndexCalibFromTds(TDS_E channel,uint16_t tds_value,uint8_t *in
 PUBLIC void ADC_Init()
 {
 
-	s_tds_in.adc_sample = QUEUE_InitQueue(ADC_SAMPLE_QUEUE_SIZE,sizeof(int16_t));
 	s_tds_out.adc_sample = QUEUE_InitQueue(ADC_SAMPLE_QUEUE_SIZE,sizeof(int16_t));
 	ADC_InitConfigFlash();
 
 	s_200ms_cnt = 0;
 	FALL_PULSE;
 	g_adc_flag = 0U;
+	UART_UartPuts("6");
 	while((QUEUE_QueueIsEmpty(s_tds_out.adc_sample)))
 	{
+//		UART_UartPuts("c");
     	if(g_adc_flag)
     	{
+//    		UART_UartPuts("a");
     		ADC_UpdateTds (0);
+
     	}
-//    	UART_UartPuts("a");
+
 	}
+	UART_UartPuts("d");
 	s_tds_out.tds_display = curentData_getLastTdsOut();
 
 }
@@ -364,11 +368,16 @@ PUBLIC void   ADC_UpdateTds (uint8_t state)
 	}
 //	R_Config_S12AD0_Get_ValueResult(TDS_IN_CHANNEL, &adc_result_tds_in);
 	ADC12_SetChannelConfig(ADC12_1_PERIPHERAL, 0U, &ADC12_1_channelsConfig[0]);
-	while (!g_adc_flag)
-    	        {
-    	        }
+	while (0U == (kADC12_ChannelConversionCompletedFlag &
+	                      ADC12_GetChannelStatusFlags(ADC0, 0U)))
+	        {
+	        }
+	g_adc_flag = 1U;
 	adc_result_tds_out = ADC12_GetChannelConversionValue(ADC12_1_PERIPHERAL, 0U);
-
+	uint8_t buffer_size;
+	uint8_t print_str[10];
+	    buffer_size = sprintf(print_str, "%d\n", adc_result_tds_out);
+	    LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
 // 0 với mạch test 1 với mạch cũ
 #ifdef HW_VER_214
 	if(g_pwm_value ==  0)

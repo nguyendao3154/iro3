@@ -55,7 +55,7 @@ volatile uint32_t g_sysTime = 0;
 volatile uint8_t g_run1msFlag = 0;
 volatile uint8_t g_run200usFlag = 0;
 volatile uint8_t s_200usTick = 0;
-
+bool ftm_flag = 0;
 volatile uint8_t g_pwm_timer;
 volatile uint8_t g_pwm_value = 0;
 volatile uint8_t cnt = 0;
@@ -75,7 +75,7 @@ LOCAL volatile uint16_t  s_rev_index = 0;
 
 LOCAL  uint16_t  s_rev_index_pre = 0;
 
-LOCAL volatile bool  s_rev_done = false;
+volatile bool  s_rev_done = false;
 
 uint32_t g_sysTimeS = 0;
 uint16_t g_adc_result;
@@ -126,6 +126,7 @@ void PWT_LPTMR0_IRQHandler(void)
 {
 
 	LPTMR_ClearStatusFlags(LPTMR0, kLPTMR_TimerCompareFlag);
+//	UART_UartPuts("timer");
     /* Start user code for r_Config_CMT1_cmi1_interrupt. Do not edit comment generated here */
 	if(++s_200usTick == 5)
 	{
@@ -152,28 +153,30 @@ void main(void)
 {
 	BOARD_InitPins();
 	BOARD_BootClockRUN();
+	UART_Init();
+	UART_UartPuts("UART init done\r\n");
 	BOARD_InitBootPeripherals();
 	LPTMR_StartTimer(LPTMR0);
     GPIO_Init();
-	TOUCH_init();
-	UART_Init();
+//	TOUCH_init();
 	UART_UartPuts("1");
 //	flash_app_init();
-//	ADC_Init();
-	UART_UartPuts("2");
 	TIMER_Init();
-	UART_UartPuts("3");
+
+	UART_UartPuts("2");
+
 	Display_showStart();
-	UART_UartPuts("4");
+	UART_UartPuts("3");
+	ADC_Init();
 	g_disableLedKey = true;
 	Led7_ReduceIntensity(true);
-//	pumpControl_onVanXaInMs(5000);
-	UART_UartPuts("5");
+	pumpControl_onVanXaInMs(5000);
+
 	/* Main loop */
 
 	while(1)
 	{
-
+//		UART_UartPuts("5");
     	 if(g_run200usFlag == 1)
     	 {
     	 	run200usTask();
@@ -199,13 +202,22 @@ void main(void)
     	 	s_timeOut100ms = 0;
 
     	 }
-//    	 if(g_adc_flag)
-//    	 {
-//    	 	ADC_UpdateTds (s_pwm_cnt);
-//
-//    	 }
-//    	 UART_Process();
-//    	 TIMER_CheckTimerEvent();
+    	 if(ftm_flag){
+//    		 UART_UartPuts("6");
+    	 }
+    	 if(g_adc_flag)
+    	 {
+    	 	ADC_UpdateTds (s_pwm_cnt);
+//    		 uint16_t adcval;
+//    		 adcval = ADC12_GetChannelConversionValue(ADC12_1_PERIPHERAL, 0U);
+//    		 	uint8_t buffer_size;
+//    		 	uint8_t print_str[10];
+//    		 	    buffer_size = sprintf(print_str, "%d\n", adcval);
+//    		 	    LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
+//    		 	   g_adc_flag = 0;
+    	 }
+    	 UART_Process();
+    	 TIMER_CheckTimerEvent();
 	}
 }
 
@@ -253,6 +265,7 @@ void abort(void)
 void FTM_1_IRQHANDLER(void)
 {
 	FTM_ClearStatusFlags(FTM0, kFTM_TimeOverflowFlag);
+	ftm_flag = 1;
     if(0U == g_adc_flag)
 	{
 		uint8_t check = (cnt++) % 4;
@@ -262,7 +275,8 @@ void FTM_1_IRQHANDLER(void)
 				g_pwm_value = 1;
 				break;
 			case 1:
-				 ADC12_SetChannelConfig(ADC12_1_PERIPHERAL, 0U, &ADC12_1_channelsConfig[0]);
+				ADC12_SetChannelConfig(ADC12_1_PERIPHERAL, 0U, &ADC12_1_channelsConfig[0]);
+				g_adc_flag = 1U;
 				break;
 			case 2:
 				FALL_PULSE;
@@ -270,6 +284,7 @@ void FTM_1_IRQHANDLER(void)
 				break;
 			case 3:
 				ADC12_SetChannelConfig(ADC12_1_PERIPHERAL, 0U, &ADC12_1_channelsConfig[0]);
+				g_adc_flag = 1U;
 				break;
 			default:
 				break;
@@ -316,10 +331,10 @@ void LPUART_1_SERIAL_RX_TX_IRQHANDLER(void)
     __DSB();
 #endif
 }
-void ADC0_IRQHandler(void)
-{
-    g_adc_flag = 1U;
-}
+//void ADC12_1_IRQHANDLER(void)
+//{
+//    g_adc_flag = 1U;
+//}
 PUBLIC void UART_CheckDataReadDonePacket (void )
 {
 	if((s_rev_index == s_rev_index_pre) && (g_rx_flag))

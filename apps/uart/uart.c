@@ -116,7 +116,7 @@ static char print_str[UART_SEND_MAX_LEN];
 /* Global variable used for storing data received from PC terminal */
 extern volatile uint8_t g_rx_char;
 extern bool g_disableTdsIn;
-
+extern volatile bool s_rev_done;
 PUBLIC bool g_ioTestEn = FALSE;
 LOCAL bool s_dbg_en = FALSE;
 
@@ -745,35 +745,6 @@ LOCAL ERR_E UART_HandleSetWaitTimeUpdateTds(uint8 *value, uint8 *out)
 /******************************************************************************
 * Global functions
 ******************************************************************************/
-
-/**
- * @brief One line documentation
- *
- * A more detailed documentation
- *
- * @param arg1 the first function argument
- * @param arg2 the second function argument
- *
- * @return descrition for the function return value
- */
-PUBLIC void UART_Init(void)
-{
-
-	lpuart_config_t config;
-
-	    LPUART_GetDefaultConfig(&config);
-	    config.baudRate_Bps = 115200;
-	    config.enableTx     = true;
-	    config.enableRx     = true;
-
-	    LPUART_Init(LPUART0, &config, CLOCK_GetFreq(kCLOCK_ScgFircClk));
-
-    sprintf(print_str, "UART init done\r\n");
-    LPUART_WriteBlocking(LPUART0, (uint8_t *)print_str, (uint16_t)strlen(print_str) - 1);
-//    LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
-//    EnableIRQ(LPUART0_IRQn);
-}
-
 /**
  * @brief One line documentation
  *
@@ -799,6 +770,36 @@ PUBLIC void UART_UartPuts(uint8_t *s)
 	buffer_size = sprintf(print_str, "%s", s);
 	LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
 }
+
+/**
+ * @brief One line documentation
+ *
+ * A more detailed documentation
+ *
+ * @param arg1 the first function argument
+ * @param arg2 the second function argument
+ *
+ * @return descrition for the function return value
+ */
+PUBLIC void UART_Init(void)
+{
+
+	lpuart_config_t config;
+
+	    LPUART_GetDefaultConfig(&config);
+	    config.baudRate_Bps = 115200;
+	    config.enableTx     = true;
+	    config.enableRx     = true;
+
+	    LPUART_Init(LPUART0, &config, CLOCK_GetFreq(kCLOCK_ScgFircClk));
+
+	    UART_UartPuts("UART init done\r\n");
+
+//    LPUART_EnableInterrupts(LPUART0, kLPUART_RxDataRegFullInterruptEnable);
+//    EnableIRQ(LPUART0_IRQn);
+}
+
+
 /**
  * @brief One line documentation
  *
@@ -823,7 +824,7 @@ PUBLIC void UART_Process()
 {
     uint8_t data[300] = {0};
     uint16_t len = 0;
-    if (kLPUART_TxDataRegEmptyFlag & LPUART_GetStatusFlags(LPUART0))
+    if (s_rev_done)
     {
         len = UART_ReadData(data, 300);
         UART_HandleProcess(data, len);

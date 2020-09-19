@@ -203,6 +203,7 @@
                   <clock_output id="Bus_clock.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="Core_clock.outFreq" value="48 MHz" locked="false" accuracy=""/>
                   <clock_output id="FIRCDIV2_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
+                  <clock_output id="FLLDIV2_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
                   <clock_output id="Flash_clock.outFreq" value="24 MHz" locked="false" accuracy=""/>
                   <clock_output id="LPO1KCLK.outFreq" value="1 kHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="128 kHz" locked="false" accuracy=""/>
@@ -214,9 +215,10 @@
                </clock_outputs>
                <clock_settings>
                   <setting id="PCC.PCC_ADC0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
-                  <setting id="PCC.PCC_LPTMR0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
+                  <setting id="PCC.PCC_LPTMR0_SEL.sel" value="SCG.FLLDIV2_CLK" locked="false"/>
                   <setting id="PCC.PCC_LPUART0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
                   <setting id="SCG.FIRCDIV2.scale" value="1" locked="true"/>
+                  <setting id="SCG.LPFLLDIV2.scale" value="1" locked="true"/>
                   <setting id="SCG.SIRCDIV2.scale" value="0" locked="true"/>
                   <setting id="SCG.TRIMDIV.scale" value="4" locked="false"/>
                   <setting id="SCG_LPFLLCSR_LPFLLEN_CFG" value="Enabled" locked="false"/>
@@ -440,7 +442,7 @@
                   </instance>
                   <instance name="ADC12_1" type="adc12" type_id="adc12_5324d28dd0212c08055a9d9cd4317082" mode="ADC12" peripheral="ADC0" enabled="true">
                      <config_set name="fsl_adc12">
-                        <setting name="enable_irq" value="true"/>
+                        <setting name="enable_irq" value="false"/>
                         <struct name="adc_interrupt">
                            <setting name="IRQn" value="ADC0_IRQn"/>
                            <setting name="enable_priority" value="false"/>
@@ -467,7 +469,7 @@
                         <array name="adc12_channels_config">
                            <struct name="0">
                               <setting name="channelNumber" value="SE.1"/>
-                              <setting name="enableInterruptOnConversionCompleted" value="true"/>
+                              <setting name="enableInterruptOnConversionCompleted" value="false"/>
                            </struct>
                         </array>
                      </config_set>

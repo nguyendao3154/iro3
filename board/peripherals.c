@@ -243,7 +243,7 @@ instance:
 - peripheral: 'ADC0'
 - config_sets:
   - fsl_adc12:
-    - enable_irq: 'true'
+    - enable_irq: 'false'
     - adc_interrupt:
       - IRQn: 'ADC0_IRQn'
       - enable_priority: 'false'
@@ -267,7 +267,7 @@ instance:
     - adc12_channels_config:
       - 0:
         - channelNumber: 'SE.1'
-        - enableInterruptOnConversionCompleted: 'true'
+        - enableInterruptOnConversionCompleted: 'false'
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 const adc12_config_t ADC12_1_config = {
@@ -281,7 +281,7 @@ const adc12_config_t ADC12_1_config = {
 adc12_channel_config_t ADC12_1_channelsConfig[1] = {
   {
     .channelNumber = 1U,
-    .enableInterruptOnConversionCompleted = true
+    .enableInterruptOnConversionCompleted = false
   }
 };
 const adc12_hardware_average_mode_t ADC12_1_hardwareAverageConfig = kADC12_HardwareAverageDisabled;
@@ -299,8 +299,6 @@ void ADC12_1_init(void) {
   ADC12_SetGainValue(ADC12_1_PERIPHERAL, 0);
   /* Perform auto calibration */
   ADC12_DoAutoCalibration(ADC12_1_PERIPHERAL);
-  /* Enable interrupt ADC0_IRQn request in the NVIC */
-  EnableIRQ(ADC0_IRQn);
 }
 
 /***********************************************************************************************************************
@@ -312,7 +310,7 @@ void BOARD_InitPeripherals(void)
 //  LPUART_1_init();
   LPTMR_1_init();
   FTM_1_init();
-//  ADC12_1_init();
+  ADC12_1_init();
 }
 
 /***********************************************************************************************************************
