@@ -33,6 +33,7 @@
 #include "TSI_key.h"
 #include "UIControl.h"
 #include "led.h"
+#include "uart.h"
 /******************************************************************************
 * External objects
 ******************************************************************************/
@@ -103,8 +104,10 @@ void  TOUCH_init()
 void TOUCH_process()
 {
 	button_event = TSI_KeyDetect(&button_id);
+//	UART_UartPuts("0");
 	if(kKey_Event_Touch == button_event)
    {
+		UART_UartPuts("0");
 	   if(button_id == BUTTON_ID_SET)
 	   {
 
@@ -113,28 +116,29 @@ void TOUCH_process()
 	   {
 		   TouchBtnPressed_cb(button_id);
 	   }
-	   if(UIControl_stateIsLock())
+	   if(UIControl_stateIsLock()){
 		   return;
+	   }
 	   switch(button_id)
 	   {
 	   case BUTTON_ID_SET:
 	   {
-
+		   UART_UartPuts("1");
 		   break;
 	   }
 	   case BUTTON_ID_PLUS:
 	   {
-
+		   UART_UartPuts("2");
 		   break;
 	   }
 	   case BUTTON_ID_MINUS:
 	   {
-
+		   UART_UartPuts("3");
 		   break;
 	   }
 	   case BUTTON_ID_SELECT:
 	   {
-
+		   UART_UartPuts("4");
 		   break;
 	   }
 	   default:
@@ -142,7 +146,7 @@ void TOUCH_process()
 	   }
    }
 
-   if(kKey_Event_Release == button_event)
+	else if(kKey_Event_Release == button_event)
    {
 	   TouchBtnHoldRelease_cb(button_id);
 	   if(button_id == BUTTON_ID_SET)
@@ -179,6 +183,9 @@ void TOUCH_process()
 	   default:
 		   break;
 	   }
+   }
+   else{
+	   button_event = kKey_Event_Idle;
    }
 }
 

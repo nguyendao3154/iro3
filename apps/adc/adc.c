@@ -203,17 +203,17 @@ PUBLIC void ADC_Init()
 	FALL_PULSE;
 	g_adc_flag = 0U;
 	UART_UartPuts("6");
-	while((QUEUE_QueueIsEmpty(s_tds_out.adc_sample)))
-	{
-//		UART_UartPuts("c");
-    	if(g_adc_flag)
-    	{
-//    		UART_UartPuts("a");
-    		ADC_UpdateTds (0);
-
-    	}
-
-	}
+//	while((QUEUE_QueueIsEmpty(s_tds_out.adc_sample)))
+//	{
+////		UART_UartPuts("c");
+//    	if(g_adc_flag)
+//    	{
+////    		UART_UartPuts("a");
+//    		ADC_UpdateTds (0);
+//
+//    	}
+//
+//	}
 	UART_UartPuts("d");
 	s_tds_out.tds_display = curentData_getLastTdsOut();
 
@@ -374,10 +374,10 @@ PUBLIC void   ADC_UpdateTds (uint8_t state)
 	        }
 	g_adc_flag = 1U;
 	adc_result_tds_out = ADC12_GetChannelConversionValue(ADC12_1_PERIPHERAL, 0U);
-	uint8_t buffer_size;
-	uint8_t print_str[10];
-	    buffer_size = sprintf(print_str, "%d\n", adc_result_tds_out);
-	    LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
+//	uint8_t buffer_size;
+//	uint8_t print_str[10];
+//	    buffer_size = sprintf(print_str, "%d\n", adc_result_tds_out);
+//	    LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
 // 0 với mạch test 1 với mạch cũ
 #ifdef HW_VER_214
 	if(g_pwm_value ==  0)

@@ -79,6 +79,9 @@ volatile bool  s_rev_done = false;
 
 uint32_t g_sysTimeS = 0;
 uint16_t g_adc_result;
+uint8_t buffer_size;
+uint16_t result_tsi[4];
+uint8_t buffer[];
 /******************************************************************************
 * Constants and macros
 ******************************************************************************/
@@ -158,7 +161,7 @@ void main(void)
 	BOARD_InitBootPeripherals();
 	LPTMR_StartTimer(LPTMR0);
     GPIO_Init();
-//	TOUCH_init();
+	TOUCH_init();
 	UART_UartPuts("1");
 //	flash_app_init();
 	TIMER_Init();
@@ -182,7 +185,7 @@ void main(void)
     	 	run200usTask();
 //    	 	UART_UartPuts("6");
     	 	g_run200usFlag= 0;
-
+//    	 	UART_UartPuts("9");
     	 }
     	 if(g_run1msFlag == 1)
     	 {
@@ -194,6 +197,8 @@ void main(void)
     	 {
     	 	run10msTask();
     	 	s_timeOut10ms = 0;
+//    	 	    	 	buffer_size = sprintf(buffer, "%d,%d,%d,%d\n",result_tsi[0],result_tsi[1],result_tsi[2],result_tsi[3]);
+//    	 	    	 	LPUART_WriteBlocking(LPUART0, buffer, buffer_size);
 
     	 }
     	 if(s_timeOut100ms >= 100)
@@ -201,23 +206,25 @@ void main(void)
     	 	run100msTask();
     	 	s_timeOut100ms = 0;
 
+
+
     	 }
     	 if(ftm_flag){
 //    		 UART_UartPuts("6");
     	 }
-    	 if(g_adc_flag)
-    	 {
-    	 	ADC_UpdateTds (s_pwm_cnt);
-//    		 uint16_t adcval;
-//    		 adcval = ADC12_GetChannelConversionValue(ADC12_1_PERIPHERAL, 0U);
-//    		 	uint8_t buffer_size;
-//    		 	uint8_t print_str[10];
-//    		 	    buffer_size = sprintf(print_str, "%d\n", adcval);
-//    		 	    LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
-//    		 	   g_adc_flag = 0;
-    	 }
-    	 UART_Process();
-    	 TIMER_CheckTimerEvent();
+//    	 if(g_adc_flag)
+//    	 {
+//    	 	ADC_UpdateTds (s_pwm_cnt);
+////    		 uint16_t adcval;
+////    		 adcval = ADC12_GetChannelConversionValue(ADC12_1_PERIPHERAL, 0U);
+////    		 	uint8_t buffer_size;
+////    		 	uint8_t print_str[10];
+////    		 	    buffer_size = sprintf(print_str, "%d\n", adcval);
+////    		 	    LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
+////    		 	   g_adc_flag = 0;
+//    	 }
+//    	 UART_Process();
+//    	 TIMER_CheckTimerEvent();
 	}
 }
 

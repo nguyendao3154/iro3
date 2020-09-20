@@ -190,6 +190,7 @@ uint8_t TSI_KeyDetect(uint8_t *current_key_id)
 
     key_touch_threshold = key_baseline_temp + key->key_touch_delta;
     result_tsi[g_keyId] = TSI_sampleResult;
+
     if (key_state_temp == kKey_State_Idle)
     {
         if (TSI_sampleResult > key_touch_threshold)

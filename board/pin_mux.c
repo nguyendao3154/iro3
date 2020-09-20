@@ -54,10 +54,6 @@ BOARD_InitPins:
   - {pin_num: '22', peripheral: GPIOC, signal: 'GPIO, 1', pin_signal: ADC0_SE9/TSI0_CH23/PTC1/FTM0_CH1, direction: OUTPUT}
   - {pin_num: '23', peripheral: GPIOC, signal: 'GPIO, 0', pin_signal: ADC0_SE8/TSI0_CH22/PTC0/FTM0_CH0, direction: OUTPUT}
   - {pin_num: '24', peripheral: GPIOB, signal: 'GPIO, 3', pin_signal: ADC0_SE7/TSI0_CH21/PTB3/FTM1_CH1/LPSPI0_SIN/FTM1_QD_PHA/TRGMUX_IN2, direction: OUTPUT}
-  - {pin_num: '3', peripheral: GPIOE, signal: 'GPIO, 11', pin_signal: TSI0_CH3/PTE11/PWT_IN1/LPTMR0_ALT1, direction: OUTPUT}
-  - {pin_num: '4', peripheral: GPIOE, signal: 'GPIO, 10', pin_signal: TSI0_CH2/PTE10/CLKOUT, direction: OUTPUT}
-  - {pin_num: '5', peripheral: GPIOE, signal: 'GPIO, 5', pin_signal: TSI0_CH0/PTE5/TCLK2/CAN0_TX/EWM_IN, direction: OUTPUT}
-  - {pin_num: '6', peripheral: GPIOE, signal: 'GPIO, 4', pin_signal: TSI0_CH1/PTE4/BUSOUT/CAN0_RX/EWM_OUT_b, direction: OUTPUT}
   - {pin_num: '32', peripheral: GPIOD, signal: 'GPIO, 4', pin_signal: PTD4/FTM0_FLT3, direction: OUTPUT}
   - {pin_num: '41', peripheral: GPIOE, signal: 'GPIO, 6', pin_signal: PTE6/LPSPI0_PCS2/LPUART1_RTS, direction: OUTPUT}
   - {pin_num: '37', peripheral: ADC0, signal: 'SE, 1', pin_signal: ADC0_SE1/ACMP0_IN1/TSI0_CH18/PTA1/FTM1_CH1/LPI2C0_SDAS/FTM1_QD_PHA/LPUART0_RTS/TRGMUX_OUT0}
@@ -65,6 +61,10 @@ BOARD_InitPins:
   - {pin_num: '2', peripheral: ADC0, signal: 'TRIGGER_COCO_FLAG, B', pin_signal: TSI0_CH4/PTD0/FTM0_CH2/TRGMUX_OUT1}
   - {pin_num: '25', peripheral: GPIOB, signal: 'GPIO, 2', pin_signal: ADC0_SE6/TSI0_CH20/PTB2/FTM1_CH0/LPSPI0_SCK/FTM1_QD_PHB/TRGMUX_IN3, direction: OUTPUT}
   - {pin_num: '11', peripheral: GPIOB, signal: 'GPIO, 7', pin_signal: EXTAL/PTB7/LPI2C0_SCL, direction: OUTPUT}
+  - {pin_num: '5', peripheral: TSI, signal: 'CH, 0', pin_signal: TSI0_CH0/PTE5/TCLK2/CAN0_TX/EWM_IN}
+  - {pin_num: '6', peripheral: TSI, signal: 'CH, 1', pin_signal: TSI0_CH1/PTE4/BUSOUT/CAN0_RX/EWM_OUT_b}
+  - {pin_num: '4', peripheral: TSI, signal: 'CH, 2', pin_signal: TSI0_CH2/PTE10/CLKOUT}
+  - {pin_num: '3', peripheral: TSI, signal: 'CH, 3', pin_signal: TSI0_CH3/PTE11/PWT_IN1/LPTMR0_ALT1}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -193,20 +193,6 @@ void BOARD_InitPins(void)
     /* Initialize GPIO functionality on pin PTE3 (pin 13)  */
     GPIO_PinInit(GPIOE, 3U, &gpioe_pin13_config);
 
-    gpio_pin_config_t gpioe_pin6_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PTE4 (pin 6)  */
-    GPIO_PinInit(GPIOE, 4U, &gpioe_pin6_config);
-
-    gpio_pin_config_t gpioe_pin5_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PTE5 (pin 5)  */
-    GPIO_PinInit(GPIOE, 5U, &gpioe_pin5_config);
-
     gpio_pin_config_t gpioe_pin41_config = {
         .pinDirection = kGPIO_DigitalOutput,
         .outputLogic = 0U
@@ -220,20 +206,6 @@ void BOARD_InitPins(void)
     };
     /* Initialize GPIO functionality on pin PTE8 (pin 14)  */
     GPIO_PinInit(GPIOE, 8U, &gpioe_pin14_config);
-
-    gpio_pin_config_t gpioe_pin4_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PTE10 (pin 4)  */
-    GPIO_PinInit(GPIOE, 10U, &gpioe_pin4_config);
-
-    gpio_pin_config_t gpioe_pin3_config = {
-        .pinDirection = kGPIO_DigitalOutput,
-        .outputLogic = 0U
-    };
-    /* Initialize GPIO functionality on pin PTE11 (pin 3)  */
-    GPIO_PinInit(GPIOE, 11U, &gpioe_pin3_config);
 
     /* PORTA1 (pin 37) is configured as ADC0_SE1 */
     PORT_SetPinMux(PORTA, 1U, kPORT_PinDisabledOrAnalog);
@@ -292,20 +264,20 @@ void BOARD_InitPins(void)
     /* PORTD7 (pin 19) is configured as PTD7 */
     PORT_SetPinMux(PORTD, 7U, kPORT_MuxAsGpio);
 
-    /* PORTE10 (pin 4) is configured as PTE10 */
-    PORT_SetPinMux(PORTE, 10U, kPORT_MuxAsGpio);
+    /* PORTE10 (pin 4) is configured as TSI0_CH2 */
+    PORT_SetPinMux(PORTE, 10U, kPORT_PinDisabledOrAnalog);
 
-    /* PORTE11 (pin 3) is configured as PTE11 */
-    PORT_SetPinMux(PORTE, 11U, kPORT_MuxAsGpio);
+    /* PORTE11 (pin 3) is configured as TSI0_CH3 */
+    PORT_SetPinMux(PORTE, 11U, kPORT_PinDisabledOrAnalog);
 
     /* PORTE3 (pin 13) is configured as PTE3 */
     PORT_SetPinMux(PORTE, 3U, kPORT_MuxAsGpio);
 
-    /* PORTE4 (pin 6) is configured as PTE4 */
-    PORT_SetPinMux(PORTE, 4U, kPORT_MuxAsGpio);
+    /* PORTE4 (pin 6) is configured as TSI0_CH1 */
+    PORT_SetPinMux(PORTE, 4U, kPORT_PinDisabledOrAnalog);
 
-    /* PORTE5 (pin 5) is configured as PTE5 */
-    PORT_SetPinMux(PORTE, 5U, kPORT_MuxAsGpio);
+    /* PORTE5 (pin 5) is configured as TSI0_CH0 */
+    PORT_SetPinMux(PORTE, 5U, kPORT_PinDisabledOrAnalog);
 
     /* PORTE6 (pin 41) is configured as PTE6 */
     PORT_SetPinMux(PORTE, 6U, kPORT_MuxAsGpio);
