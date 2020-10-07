@@ -116,12 +116,14 @@ outputs:
 - {id: LPO1KCLK.outFreq, value: 1 kHz}
 - {id: LPO_clock.outFreq, value: 128 kHz}
 - {id: PCC.PCC_ADC0_CLK.outFreq, value: 48 MHz}
+- {id: PCC.PCC_LPI2C0_CLK.outFreq, value: 48 MHz}
 - {id: PCC.PCC_LPTMR0_CLK.outFreq, value: 48 MHz}
 - {id: PCC.PCC_LPUART0_CLK.outFreq, value: 48 MHz}
 - {id: SIRC_CLK.outFreq, value: 8 MHz}
 - {id: System_clock.outFreq, value: 48 MHz}
 settings:
 - {id: PCC.PCC_ADC0_SEL.sel, value: SCG.FIRCDIV2_CLK}
+- {id: PCC.PCC_LPI2C0_SEL.sel, value: SCG.FIRCDIV2_CLK}
 - {id: PCC.PCC_LPTMR0_SEL.sel, value: SCG.FLLDIV2_CLK}
 - {id: PCC.PCC_LPUART0_SEL.sel, value: SCG.FIRCDIV2_CLK}
 - {id: SCG.FIRCDIV2.scale, value: '1', locked: true}
@@ -194,6 +196,8 @@ void BOARD_BootClockRUN(void)
     SystemCoreClock = BOARD_BOOTCLOCKRUN_CORE_CLOCK;
     /* Set PCC ADC0 selection */
     CLOCK_SetIpSrc(kCLOCK_Adc0, kCLOCK_IpSrcFircAsync);
+    /* Set PCC LPI2C0 selection */
+    CLOCK_SetIpSrc(kCLOCK_Lpi2c0, kCLOCK_IpSrcFircAsync);
     /* Set PCC LPUART0 selection */
     CLOCK_SetIpSrc(kCLOCK_Lpuart0, kCLOCK_IpSrcFircAsync);
     /* Set PCC LPTMR0 selection */

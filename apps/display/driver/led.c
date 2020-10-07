@@ -94,16 +94,16 @@ void Led_switchMachineStateLed(MachineStateLed_t machineState)
 	s_currentMachineState = machineState;
 	uint8_t i;
 	for ( i = 0;  i < LED_MACHINE_STATE_NUM; ++ i) {
-		GPIO_PortSet(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i]);
+		GPIO_PinWrite(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i], 1);
 	}
-	GPIO_PortClear(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i]);
+	GPIO_PinWrite(LED_MACHINE_STATE_PORT[machineState], LED_MACHINE_STATE_PIN[machineState], 0);
 }
 
 void Led_turnOffMachineStateled()
 {
 	uint8_t i;
 	for ( i = 0;  i < LED_MACHINE_STATE_NUM; ++ i) {
-		GPIO_PortSet(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i]);
+		GPIO_PinWrite(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i], 1);
 	}
 }
 
@@ -116,7 +116,7 @@ void Led_turnOnAll()
 {
 
 	for (uint8_t i = 0;  i < LED_MACHINE_STATE_NUM; ++ i) {
-		GPIO_PortClear(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i]);
+		GPIO_PinWrite(LED_MACHINE_STATE_PORT[i], LED_MACHINE_STATE_PIN[i], 0);
 	}
 }
 

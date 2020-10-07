@@ -35,6 +35,7 @@
 #include "display.h"
 #include "filterExpire.h"
 #include "CurentData.h"
+#include "uart.h"
 
 /******************************************************************************
 * External objects
@@ -186,11 +187,13 @@ void saveCurentSetingNumer()
 }
 void UIControl_btnHold_cb(ButtonId_t btn,uint32_t holdingTime)
 {
+//	UART_UartPuts("hold1");
 	s_lastPressTime = g_sysTime;
 	if((btn == BUTTON_ID_SET) && (holdingTime == HOLD_TIME2))
 	{
 		if(s_uiMode == UI_MODE_SETTING)
 		{
+//			UART_UartPuts("hold2");
 			s_uiMode = UI_MODE_NOMAL;
 			Buzzer_onInMs(TIME_BUZZER_ON);
 			saveCurentSetingNumer();
@@ -230,7 +233,7 @@ void UIControl_btnHold_cb(ButtonId_t btn,uint32_t holdingTime)
 	}
 	else if((btn == BUTTON_ID_SELECT) && (holdingTime == HOLD_TIME3) && (s_UIState == UI_STATE_DEFAULD))
 	{
-//		flash_app_factoryReset();
+		flash_app_factoryReset();
 		s_needReset = true;
 		s_timeReset = g_sysTime + 500;
 		Buzzer_onInMs(300);
@@ -349,6 +352,7 @@ void UIControl_btnProcess()
 			{
 				if(btnControls[btnId].state == BTN_STATE_PRESS)
 				{
+					UART_UartPuts("hold3");
 					btnControls[btnId].state = BTN_STATE_HOLD1;
 					UIControl_btnHold_cb(btnId,HOLD_TIME1);
 				}
@@ -356,6 +360,7 @@ void UIControl_btnProcess()
 				{
 					if(btnControls[btnId].state == BTN_STATE_HOLD1)
 					{
+						UART_UartPuts("hold4");
 						btnControls[btnId].state = BTN_STATE_HOLD2;
 						UIControl_btnHold_cb(btnId,HOLD_TIME2);
 					}

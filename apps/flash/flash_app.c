@@ -23,11 +23,11 @@
 //******************************************************************************/
 //
 //
-//#include "flash_app.h"
-//#include "user_config.h"
-//#include "filter_time.h"
-//#include "filterExpire.h"
-//#include "CurentData.h"
+#include "flash_app.h"
+#include "user_config.h"
+#include "filter_time.h"
+#include "filterExpire.h"
+#include "CurentData.h"
 //
 ///******************************************************************************
 //* External objects
@@ -104,31 +104,26 @@
 // *
 // * @return descrition for the function return value
 // */
-//void flash_app_init()
-//{
-//    flash_err_t err;
+void flash_app_init()
+{
+   
+//    flash_app_eraseAll();
+   user_config_init();
+   filter_time_init();
+   filterExpire_init();
+   curentData_init();
+   //    filter_time_eraseBlock(DEFAULD_BLOCK);
+
+}
 //
-//    /* Open driver */
-//    err = R_FLASH_Open();
-//    if (err != FLASH_SUCCESS)
-//        while(1);
-////    flash_app_eraseAll();
-//    user_config_init();
-//    filter_time_init();
-//    filterExpire_init();
-//    curentData_init();
-//    //    filter_time_eraseBlock(DEFAULD_BLOCK);
-//
-//}
-//
-//void flash_app_factoryReset()
-//{
-//	curentData_resetData();
+void flash_app_factoryReset()
+{
+	curentData_resetData();
 ////	UserConfig_resetToDefault();
 ////	filter_time_resetToDefault();
 ////	filterExpire_resetToDefault();
 //
-//}
+}
 //void flash_app_eraseBlock(flash_block_address_t blockAdress)
 //{
 //	flash_err_t err;
@@ -147,63 +142,37 @@
 //    }
 //}
 //
-//bool flash_app_writeBlock(uint8_t * data, flash_block_address_t blockAdress,uint16_t dataSize)
-//{
-//    uint32_t    addr, i;
-//    flash_err_t err;
-//    union data_len len;
-//    uint8 * data_write;
-//    if(dataSize>= NUMBER_BYTE_VALID_MAX) return false;
-//    flash_app_eraseBlock(blockAdress);
-//    data_write =  malloc(dataSize +BYTE_SAVE_LEN);
-//    if(data_write == NULL ) return false;
-//    len.len = dataSize;
-//    memcpy(data_write,len.len_byte,BYTE_SAVE_LEN);
-//    memcpy(data_write+BYTE_SAVE_LEN,data,dataSize);
-//    addr = blockAdress;
-//    err = R_FLASH_Write((uint32_t)data_write, addr, FLASH_DF_BLOCK_SIZE);
-//    if(err != FLASH_SUCCESS)
-//    {
-//        while(1) ;
-//    }
+bool flash_app_writeBlock(uint8_t * data, uint32_t blockAdress,size_t dataSize)
+{
+	if(dataSize>= NUMBER_BYTE_VALID_MAX) return false;
+	lpi2c_master_transfer_t masterXfer;
+	memset(&masterXfer, 0, sizeof(masterXfer));
+	masterXfer.slaveAddress   = 0x50;
+	masterXfer.direction      = kLPI2C_Write;
+	masterXfer.subaddress     = blockAdress;
+	masterXfer.subaddressSize = 1;
+	masterXfer.data           = data;
+	masterXfer.dataSize       = dataSize;
+	masterXfer.flags          = kLPI2C_TransferDefaultFlag;
+	LPI2C_MasterTransferBlocking(LPI2C0_BASE, &masterXfer);
+   return true;
+}
 //
-//    /* Verify data write */
-//    for (i=0; i < dataSize+BYTE_SAVE_LEN; i++)
-//    {
-//        if (*(data_write +i) != *((uint8_t *)(addr + i)))
-//            while(1);
-//    }
-//    free(data_write);
-//    return true;
-//}
-//
-//bool flash_app_readData(uint8* dataRead, flash_block_address_t blockAdress,uint16_t dataSize)
-//{
-//    flash_err_t err;
-//    flash_res_t result;
-//    union data_len len;
-//    int i;
-//    if(dataSize>= NUMBER_BYTE_VALID_MAX) return false;
-//    err = R_FLASH_BlankCheck(blockAdress, FLASH_DF_BLOCK_SIZE, &result);
-//    if (err != FLASH_SUCCESS)
-//        while(1) ;
-//    if(result == FLASH_RES_BLANK)
-//    	return false;
-//    for (i=0;i<BYTE_SAVE_LEN;i++)
-//    {
-//    	len.len_byte[i] = *((uint8_t *)(blockAdress + i));;
-//    }
-//    if (len.len != dataSize)
-//    {
-//    	return false;
-//    }
-//    for ( i=0; i < dataSize; i ++)
-//    {
-//        *(dataRead + i) = *((uint8_t *)(blockAdress + i+BYTE_SAVE_LEN));
-//    }
-//
-//    return true;
-//}
+bool flash_app_readData(uint8_t* dataRead, uint32_t blockAdress, size_t dataSize)
+{
+	if(dataSize>= NUMBER_BYTE_VALID_MAX) return false;
+	lpi2c_master_transfer_t masterXfer;
+	memset(&masterXfer, 0, sizeof(masterXfer));
+	masterXfer.slaveAddress   = 0x50;
+	masterXfer.direction      = kLPI2C_Read;
+	masterXfer.subaddress     = blockAdress;
+	masterXfer.subaddressSize = 1;
+	masterXfer.data           = dataRead;
+	masterXfer.dataSize       = dataSize;
+	masterXfer.flags          = kLPI2C_TransferDefaultFlag;
+	LPI2C_MasterTransferBlocking(LPI2C0_BASE, &masterXfer);
+   return true;
+}
 ///**
 // * @brief One line documentation
 // *

@@ -40,7 +40,7 @@
 ******************************************************************************/
 extern uint8_t g_adc_flag;
 extern volatile uint8_t g_pwm_value;
-
+extern uint16_t debg;
 /******************************************************************************
 * Global variables
 ******************************************************************************/
@@ -143,16 +143,16 @@ LOCAL void ADC_PushDataToQueue (int16_t data ,TDS_T* tds)
 
 LOCAL void ADC_InitConfigFlash()
 {
-//    bool readOk = flash_app_readData((uint8_t*)&s_tds_calib_param,TDS_PARAM_BLOCK,sizeof(s_tds_calib_param));
+   bool readOk = flash_app_readData((uint8_t*)&s_tds_calib_param,TDS_PARAM_BLOCK,sizeof(s_tds_calib_param));
 
-    // if(!readOk)
-    // {
+    if(!readOk)
+    {
     	memcpy(&(s_tds_calib_param.tds_in),&TDS_IN_CONFIG_DEFAULD,sizeof(s_tds_calib_param.tds_in));
     	memcpy(&(s_tds_calib_param.tds_out),&TDS_OUT_CONFIG_DEFAULD,sizeof(s_tds_calib_param.tds_out));
     	s_tds_calib_param.tds_out_max    = TDS_OUT_MAX_DEFAULT;
     	s_tds_calib_param.adc_h2o_det = ADC_H2O_DET_DEFAULT;
-//    	flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
-    // }
+   	flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
+    }
 
 
 }
@@ -203,17 +203,17 @@ PUBLIC void ADC_Init()
 	FALL_PULSE;
 	g_adc_flag = 0U;
 	UART_UartPuts("6");
-//	while((QUEUE_QueueIsEmpty(s_tds_out.adc_sample)))
-//	{
-////		UART_UartPuts("c");
-//    	if(g_adc_flag)
-//    	{
-////    		UART_UartPuts("a");
-//    		ADC_UpdateTds (0);
-//
-//    	}
-//
-//	}
+	while((QUEUE_QueueIsEmpty(s_tds_out.adc_sample)))
+	{
+//		UART_UartPuts("c");
+    	if(g_adc_flag)
+    	{
+//    		UART_UartPuts("a");
+    		ADC_UpdateTds (0);
+
+    	}
+
+	}
 	UART_UartPuts("d");
 	s_tds_out.tds_display = curentData_getLastTdsOut();
 
@@ -313,17 +313,17 @@ PUBLIC void   ADC_UpdateTds (uint8_t state)
 	{
 		s_200ms_cnt = 0;
 		//update tds in
-		current_adc_tds_in = ((s_tds_in.high_cnt == 0)| (s_tds_in.low_cnt==0))?0: \
-				((s_tds_in.sum_adc_high/s_tds_in.high_cnt) - (s_tds_in.sum_adc_low/s_tds_in.low_cnt));
-		ADC_PushDataToQueue(current_adc_tds_in,&s_tds_in);
+//		current_adc_tds_in = ((s_tds_in.high_cnt == 0)| (s_tds_in.low_cnt==0))?0: \
+//				((s_tds_in.sum_adc_high/s_tds_in.high_cnt) - (s_tds_in.sum_adc_low/s_tds_in.low_cnt));
+//		ADC_PushDataToQueue(current_adc_tds_in,&s_tds_in);
 
 	//	update tds out
 		current_adc_tds_out = ((s_tds_out.high_cnt == 0)| (s_tds_out.low_cnt==0))?0: \
 				((s_tds_out.sum_adc_high/s_tds_out.high_cnt) - (s_tds_out.sum_adc_low/s_tds_out.low_cnt));
 		ADC_PushDataToQueue(current_adc_tds_out,&s_tds_out);
 
-//		debugADC(s_tds_out.sma_tds_adc,adc_tds_out);
-		debugADC(current_adc_tds_in,current_adc_tds_out);
+//		debugADC(s_tds_out.sma_tds_adc,current_adc_tds_out);
+//		debugADC(current_adc_tds_in,current_adc_tds_out);
 		s_tds_in.high_cnt = 0;
 		s_tds_in.low_cnt  = 0;
 		s_tds_in.sum_adc_high = 0;
@@ -334,6 +334,7 @@ PUBLIC void   ADC_UpdateTds (uint8_t state)
 		s_tds_out.sum_adc_low  = 0;
 	    //check h2o det
 		// R_Config_S12AD0_Get_ValueResult(H20_CHANNEL_DETECT_1,&s_adc_h2o_det1);
+		s_adc_h2o_det1 = 5000;
 		if(s_adc_h2o_det1 < s_tds_calib_param.adc_h2o_det)
 		{
 			s_cnt_h2o_det1 ++;
@@ -350,6 +351,7 @@ PUBLIC void   ADC_UpdateTds (uint8_t state)
 		}
 		//check h2o det 2
 		// R_Config_S12AD0_Get_ValueResult(H20_CHANNEL_DETECT_2,&s_adc_h2o_det2);
+		s_adc_h2o_det2 = 5000;
 		if(s_adc_h2o_det2 < s_tds_calib_param.adc_h2o_det)
 		{
 			s_cnt_h2o_det2 ++;
@@ -367,16 +369,17 @@ PUBLIC void   ADC_UpdateTds (uint8_t state)
 		goto end_function;
 	}
 //	R_Config_S12AD0_Get_ValueResult(TDS_IN_CHANNEL, &adc_result_tds_in);
-	ADC12_SetChannelConfig(ADC12_1_PERIPHERAL, 0U, &ADC12_1_channelsConfig[0]);
+//	ADC12_SetChannelConfig(ADC12_1_PERIPHERAL, 0U, &ADC12_1_channelsConfig[0]);
 	while (0U == (kADC12_ChannelConversionCompletedFlag &
 	                      ADC12_GetChannelStatusFlags(ADC0, 0U)))
 	        {
 	        }
-	g_adc_flag = 1U;
+//	g_adc_flag = 1U;
+	debg = s_tds_out.sma_tds_adc;
 	adc_result_tds_out = ADC12_GetChannelConversionValue(ADC12_1_PERIPHERAL, 0U);
 //	uint8_t buffer_size;
 //	uint8_t print_str[10];
-//	    buffer_size = sprintf(print_str, "%d\n", adc_result_tds_out);
+//	    buffer_size = sprintf(print_str, "%d\n", s_tds_out.sma_tds_adc);
 //	    LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
 // 0 với mạch test 1 với mạch cũ
 #ifdef HW_VER_214
@@ -431,7 +434,7 @@ PUBLIC ERR_E ADC_CalibTdsValue(uint16_t tdsvalue,TDS_E channel)
 //			s_tds_calib_param.tds_out.adc_value[index] = current_adc_tds_out;
 			s_tds_calib_param.tds_in.adc_value[index] = s_tds_out.sma_tds_adc;
 		}
-//		ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
+		ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
 		f_ret = (ret == true)?OK:ERR;
 		return f_ret;
 	}
@@ -541,7 +544,7 @@ PUBLIC ERR_E ADC_CalibTdsValueFromUart(uint16_t tdsvalue,TDS_E channel,uint8_t i
 			s_tds_calib_param.tds_out.tds_value[index] = tdsvalue;
 			s_tds_calib_param.tds_out.adc_value[index] = (index == 0)?(s_tds_out.sma_tds_adc -10):s_tds_out.sma_tds_adc;
 		}
-//		ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
+		ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, TDS_PARAM_BLOCK, sizeof(s_tds_calib_param));
 		f_ret = (ret == true)?OK:ERR;
 		return f_ret;
 	}
@@ -558,8 +561,8 @@ PUBLIC ERR_E ADC_WriteAdcFromUart(int* adcTable,TDS_E channel)
 			s_tds_calib_param.tds_out.adc_value[i] = (int16_t)adcTable[i];
 		}
 	}
-//	flash_block_address_t block = TDS_PARAM_BLOCK;
-//	ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, block, sizeof(s_tds_calib_param));
+	flash_block_address_t block = TDS_PARAM_BLOCK;
+	ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, block, sizeof(s_tds_calib_param));
 	f_ret = (ret == true)?OK:ERR;
 	return f_ret;
 }
@@ -575,8 +578,8 @@ PUBLIC ERR_E ADC_WriteTdsFromUart(int* tdsTable,TDS_E channel)
 			s_tds_calib_param.tds_out.tds_value[i] = (int16_t)tdsTable[i];
 		}
 	}
-//	flash_block_address_t block = TDS_PARAM_BLOCK;
-//	ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, block, sizeof(s_tds_calib_param));
+	flash_block_address_t block = TDS_PARAM_BLOCK;
+	ret = flash_app_writeBlock((uint8_t *)&s_tds_calib_param, block, sizeof(s_tds_calib_param));
 	f_ret = (ret == true)?OK:ERR;
 	return f_ret;
 }

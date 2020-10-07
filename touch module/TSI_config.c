@@ -18,10 +18,10 @@ key_tsi_mapping_t key_TSI[] = {
 
     /* config key in self mode */
     // {{kTSI_Chnl_22}, 0xFFU, 1000U, 0U, 0U, 0U, 0U, 0U}, /* KEY 0 */
-    {{kTSI_Chnl_3}, 0xFFU, 300U, 0U, 0U, 0U, 0U, 0U}, /* KEY 1 */
-	{{kTSI_Chnl_2}, 0xFFU, 300U, 0U, 0U, 0U, 0U, 0U}, /* KEY 2 */
-	 {{kTSI_Chnl_0}, 0xFFU, 300U, 0U, 0U, 0U, 0U, 0U}, /* KEY 3 */
-	 {{kTSI_Chnl_1}, 0xFFU, 300U, 0U, 0U, 0U, 0U, 0U}, /* KEY 4 */
+    {{kTSI_Chnl_3}, 0xFFU, 5000U, 0U, 0U, 0U, 0U, 0U}, /* KEY 1 */
+	{{kTSI_Chnl_2}, 0xFFU, 5000U, 0U, 0U, 0U, 0U, 0U}, /* KEY 2 */
+	 {{kTSI_Chnl_1}, 0xFFU, 2000U, 0U, 0U, 0U, 0U, 0U}, /* KEY 3 */
+	 {{kTSI_Chnl_0}, 0xFFU, 2000U, 0U, 0U, 0U, 0U, 0U}, /* KEY 4 */
     /* Do NOT move {0xFFU, 0xFFU, 0xFFU, 0xFFU} which indicates the end of the array */
     {{0xFFU}, 0xFFU, 0xFFU, 0xFFU, 0xFFU, 0xFFU} /* the end of the array */
 };

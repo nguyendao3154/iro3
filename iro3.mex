@@ -48,6 +48,11 @@
                         <data>true</data>
                      </feature>
                   </dependency>
+                  <dependency resourceType="Peripheral" resourceId="LPI2C0" description="Peripheral LPI2C0 is not initialized" problem_level="1" source="Pins:BOARD_InitPins">
+                     <feature name="initialized" evaluation="equal">
+                        <data>true</data>
+                     </feature>
+                  </dependency>
                   <dependency resourceType="SWComponent" resourceId="platform.drivers.common" description="Pins initialization requires the COMMON Driver in the project." problem_level="2" source="Pins:BOARD_InitPins">
                      <feature name="enabled" evaluation="equal" configuration="core0">
                         <data>true</data>
@@ -164,6 +169,8 @@
                   <pin peripheral="TSI" signal="CH, 1" pin_num="6" pin_signal="TSI0_CH1/PTE4/BUSOUT/CAN0_RX/EWM_OUT_b"/>
                   <pin peripheral="TSI" signal="CH, 2" pin_num="4" pin_signal="TSI0_CH2/PTE10/CLKOUT"/>
                   <pin peripheral="TSI" signal="CH, 3" pin_num="3" pin_signal="TSI0_CH3/PTE11/PWT_IN1/LPTMR0_ALT1"/>
+                  <pin peripheral="LPI2C0" signal="SCL" pin_num="35" pin_signal="PTA3/LPI2C0_SCL/EWM_IN/LPUART0_TX"/>
+                  <pin peripheral="LPI2C0" signal="SDA" pin_num="36" pin_signal="PTA2/LPI2C0_SDA/EWM_OUT_b/LPUART0_RX"/>
                </pins>
             </function>
          </functions_list>
@@ -197,6 +204,7 @@
                   <clock_output id="LPO1KCLK.outFreq" value="1 kHz" locked="false" accuracy=""/>
                   <clock_output id="LPO_clock.outFreq" value="128 kHz" locked="false" accuracy=""/>
                   <clock_output id="PCC.PCC_ADC0_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
+                  <clock_output id="PCC.PCC_LPI2C0_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
                   <clock_output id="PCC.PCC_LPTMR0_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
                   <clock_output id="PCC.PCC_LPUART0_CLK.outFreq" value="48 MHz" locked="false" accuracy=""/>
                   <clock_output id="SIRC_CLK.outFreq" value="8 MHz" locked="false" accuracy=""/>
@@ -204,6 +212,7 @@
                </clock_outputs>
                <clock_settings>
                   <setting id="PCC.PCC_ADC0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
+                  <setting id="PCC.PCC_LPI2C0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
                   <setting id="PCC.PCC_LPTMR0_SEL.sel" value="SCG.FLLDIV2_CLK" locked="false"/>
                   <setting id="PCC.PCC_LPUART0_SEL.sel" value="SCG.FIRCDIV2_CLK" locked="false"/>
                   <setting id="SCG.FIRCDIV2.scale" value="1" locked="true"/>
@@ -224,7 +233,7 @@
          </dcdx_profile>
          <dcdx_configurations/>
       </dcdx>
-      <periphs name="Peripherals" version="6.0" enabled="true" update_project_code="false">
+      <periphs name="Peripherals" version="6.0" enabled="true" update_project_code="true">
          <dependencies>
             <dependency resourceType="SWComponent" resourceId="platform.drivers.lpuart" description="LPUART Driver not found in the toolchain/IDE project." problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
@@ -266,10 +275,20 @@
                   <data type="Version">2.0.1</data>
                </feature>
             </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.lpi2c" description="LPI2C Driver not found in the toolchain/IDE project." problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.lpi2c" description="Unsupported version of the LPI2C Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">2.1.3</data>
+               </feature>
+            </dependency>
          </dependencies>
          <generated_project_files>
-            <file path="board/peripherals.c" update_enabled="false"/>
-            <file path="board/peripherals.h" update_enabled="false"/>
+            <file path="board/peripherals.c" update_enabled="true"/>
+            <file path="board/peripherals.h" update_enabled="true"/>
          </generated_project_files>
          <peripherals_profile>
             <processor_version>6.0.1</processor_version>
@@ -310,6 +329,21 @@
                      </feature>
                   </dependency>
                   <dependency resourceType="PeripheralUnifiedSignal" resourceId="ADC0.adc_se.1" description="Signal SE of the channel 1 of the peripheral ADC0 is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="PCC.PCC_LPI2C0_CLK" description="LPI2C0 clock is inactive." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPI2C0.lpi2c_scl" description="Signal serial clock of the peripheral LPI2C0 is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
+                     <feature name="routed" evaluation="">
+                        <data type="Boolean">true</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="PeripheralUnifiedSignal" resourceId="LPI2C0.lpi2c_sda" description="Signal serial data of the peripheral LPI2C0 is not routed." problem_level="1" source="Peripherals:BOARD_InitPeripherals">
                      <feature name="routed" evaluation="">
                         <data type="Boolean">true</data>
                      </feature>
@@ -461,6 +495,53 @@
                               <setting name="enableInterruptOnConversionCompleted" value="false"/>
                            </struct>
                         </array>
+                     </config_set>
+                  </instance>
+                  <instance name="LPI2C_1" type="lpi2c" type_id="lpi2c_540b08a1d4a23952ca7a6ac43c82d1e6" mode="master" peripheral="LPI2C0" enabled="true">
+                     <config_set name="main" quick_selection="qs_interrupt">
+                        <setting name="clockSource" value="Lpi2cClock"/>
+                        <setting name="clockSourceFreq" value="GetIpFreq"/>
+                        <struct name="interrupt">
+                           <setting name="IRQn" value="LPI2C0_IRQn"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="priority" value="0"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
+                     </config_set>
+                     <config_set name="master" quick_selection="qs_master_transfer">
+                        <setting name="mode" value="transfer"/>
+                        <struct name="config">
+                           <setting name="enableMaster" value="true"/>
+                           <setting name="enableDoze" value="true"/>
+                           <setting name="debugEnable" value="false"/>
+                           <setting name="ignoreAck" value="false"/>
+                           <setting name="pinConfig" value="kLPI2C_2PinOpenDrain"/>
+                           <setting name="baudRate_Hz" value="100000"/>
+                           <setting name="busIdleTimeout_ns" value="0"/>
+                           <setting name="pinLowTimeout_ns" value="0"/>
+                           <setting name="sdaGlitchFilterWidth_ns" value="0"/>
+                           <setting name="sclGlitchFilterWidth_ns" value="0"/>
+                           <struct name="hostRequest">
+                              <setting name="enable" value="false"/>
+                              <setting name="source" value="kLPI2C_HostRequestExternalPin"/>
+                              <setting name="polarity" value="kLPI2C_HostRequestPinActiveHigh"/>
+                           </struct>
+                        </struct>
+                        <struct name="transfer">
+                           <setting name="blocking" value="false"/>
+                           <set name="flags">
+                              <selected/>
+                           </set>
+                           <setting name="slaveAddress" value="0"/>
+                           <setting name="direction" value="kLPI2C_Write"/>
+                           <setting name="subaddress" value="0"/>
+                           <setting name="subaddressSize" value="1"/>
+                           <setting name="dataSize" value="1"/>
+                           <struct name="callback">
+                              <setting name="name" value=""/>
+                              <setting name="userData" value=""/>
+                           </struct>
+                        </struct>
                      </config_set>
                   </instance>
                </instances>

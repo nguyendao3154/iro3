@@ -73,7 +73,7 @@ static uint32_t s_filterRunTimRemain[FILTER_NUM];
 
 void filter_time_updateToFlash()
 {
-//	flash_app_writeBlock((uint8_t *)s_filterRunTimRemain, FILLTER_TIME_BLOCK, sizeof(s_filterRunTimRemain));
+	flash_app_writeBlock((uint8_t *)s_filterRunTimRemain, FILLTER_TIME_BLOCK, sizeof(s_filterRunTimRemain));
 }
 
 /******************************************************************************
@@ -92,13 +92,13 @@ void filter_time_updateToFlash()
  */
 void filter_time_init()
 {
-//    bool readOk = flash_app_readData((uint8_t*)s_filterRunTimRemain,FILLTER_TIME_BLOCK,sizeof(s_filterRunTimRemain));
-//
-//    if(!readOk)
-//    {
-//    	memcpy(s_filterRunTimRemain,g_userConfig.filterRunTimeTotal,sizeof(g_userConfig.filterRunTimeTotal));
-//    	filter_time_updateToFlash();
-//    }
+   bool readOk = flash_app_readData((uint8_t*)s_filterRunTimRemain,FILLTER_TIME_BLOCK,sizeof(s_filterRunTimRemain));
+
+   if(!readOk)
+   {
+   	memcpy(s_filterRunTimRemain,g_userConfig.filterRunTimeTotal,sizeof(g_userConfig.filterRunTimeTotal));
+   	filter_time_updateToFlash();
+   }
 }
 void filter_time_resetToDefault()
 {

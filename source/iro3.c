@@ -23,12 +23,13 @@
 ******************************************************************************/
 #include "fsl_lptmr.h"
 #include "fsl_ftm.h"
+#include "fsl_lpi2c.h"
 #include "gpio.h"
 #include "config.h"
 #include "adc.h"
 #include "display.h"
 #include "touch_app.h"
-//#include "flash_app.h"
+#include "flash_app.h"
 // #include "filter_time.h"
 #include "UIControl.h"
 #include "pumpControl.h"
@@ -80,8 +81,10 @@ volatile bool  s_rev_done = false;
 uint32_t g_sysTimeS = 0;
 uint16_t g_adc_result;
 uint8_t buffer_size;
+uint16_t debg;
 uint16_t result_tsi[4];
 uint8_t buffer[];
+
 /******************************************************************************
 * Constants and macros
 ******************************************************************************/
@@ -90,6 +93,7 @@ uint8_t buffer[];
 Macro definitions
 ***********************************************************************************************************************/
 #define TIME_TO_DISPLAY_TDS  (2000) //2 secs
+#define DEBUG_ENABLE 1
 /******************************************************************************
 * Local types
 ******************************************************************************/
@@ -130,7 +134,6 @@ void PWT_LPTMR0_IRQHandler(void)
 
 	LPTMR_ClearStatusFlags(LPTMR0, kLPTMR_TimerCompareFlag);
 //	UART_UartPuts("timer");
-    /* Start user code for r_Config_CMT1_cmi1_interrupt. Do not edit comment generated here */
 	if(++s_200usTick == 5)
 	{
 		s_200usTick = 0;
@@ -154,6 +157,7 @@ void PWT_LPTMR0_IRQHandler(void)
 void main(void);
 void main(void)
 {
+	uint16_t adcval;
 	BOARD_InitPins();
 	BOARD_BootClockRUN();
 	UART_Init();
@@ -162,8 +166,9 @@ void main(void)
 	LPTMR_StartTimer(LPTMR0);
     GPIO_Init();
 	TOUCH_init();
+
 	UART_UartPuts("1");
-//	flash_app_init();
+	flash_app_init();
 	TIMER_Init();
 
 	UART_UartPuts("2");
@@ -205,26 +210,29 @@ void main(void)
     	 {
     	 	run100msTask();
     	 	s_timeOut100ms = 0;
-
+//    	 	uint8_t buffer_size;
+//    	 	uint8_t print_str[10];
+//    	 	buffer_size = sprintf(print_str, "%d\n", debg);
+//    	 	LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
 
 
     	 }
     	 if(ftm_flag){
 //    		 UART_UartPuts("6");
     	 }
-//    	 if(g_adc_flag)
-//    	 {
-//    	 	ADC_UpdateTds (s_pwm_cnt);
-////    		 uint16_t adcval;
-////    		 adcval = ADC12_GetChannelConversionValue(ADC12_1_PERIPHERAL, 0U);
-////    		 	uint8_t buffer_size;
-////    		 	uint8_t print_str[10];
-////    		 	    buffer_size = sprintf(print_str, "%d\n", adcval);
-////    		 	    LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
-////    		 	   g_adc_flag = 0;
-//    	 }
-//    	 UART_Process();
-//    	 TIMER_CheckTimerEvent();
+    	 if(g_adc_flag)
+    	 {
+    	 	ADC_UpdateTds (s_pwm_cnt);
+
+    		 adcval = ADC12_GetChannelConversionValue(ADC12_1_PERIPHERAL, 0U);
+//    		 	uint8_t buffer_size;
+//    		 	uint8_t print_str[10];
+//    		 	    buffer_size = sprintf(print_str, "%d\n", adcval);
+//    		 	    LPUART_WriteBlocking(LPUART0, print_str, strlen(print_str));
+    		 	   g_adc_flag = 0;
+    	 }
+    	 UART_Process();
+    	 TIMER_CheckTimerEvent();
 	}
 }
 

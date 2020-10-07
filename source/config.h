@@ -62,7 +62,7 @@
 // define model **********************************************************************
 // MODEL_LEAF , MODEL_888_TN , MODEL_888_TC , MODEL_IRO3_K92
 // MODEL_OPTIMUS_I1, MODEL_OPTIMUS_I2 , MODEL_TOPBOX
-#define MODEL_LEAF
+#define MODEL_OPTIMUS_I2
 
 // số lượng lõi
 #define FILTER_NUM 9

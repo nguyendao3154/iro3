@@ -73,7 +73,7 @@ SavedData curentData;
 
 void curentData_updateToFlash()
 {
-//	flash_app_writeBlock((uint8_t *)&curentData, CURENT_DATA_BLOCK, sizeof(curentData));
+	flash_app_writeBlock((uint8_t *)&curentData, CURENT_DATA_BLOCK, sizeof(curentData));
 }
 
 /******************************************************************************
@@ -92,13 +92,13 @@ void curentData_updateToFlash()
  */
 void curentData_init()
 {
-//    bool readOk = flash_app_readData((uint8_t*)&curentData,CURENT_DATA_BLOCK,sizeof(curentData));
-//
-//    if(!readOk)
-//    {
-//    	memcpy(&curentData,&DATA_DEFAULD,sizeof(DATA_DEFAULD));
-//    	curentData_updateToFlash();
-//    }
+   bool readOk = flash_app_readData((uint8_t*)&curentData,CURENT_DATA_BLOCK,sizeof(curentData));
+
+   if(!readOk)
+   {
+   	memcpy(&curentData,&DATA_DEFAULD,sizeof(DATA_DEFAULD));
+   	curentData_updateToFlash();
+   }
 
 }
 // call when update tds display

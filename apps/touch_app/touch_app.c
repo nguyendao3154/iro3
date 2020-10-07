@@ -107,7 +107,7 @@ void TOUCH_process()
 //	UART_UartPuts("0");
 	if(kKey_Event_Touch == button_event)
    {
-		UART_UartPuts("0");
+//		UART_UartPuts("0");
 	   if(button_id == BUTTON_ID_SET)
 	   {
 
@@ -123,22 +123,22 @@ void TOUCH_process()
 	   {
 	   case BUTTON_ID_SET:
 	   {
-		   UART_UartPuts("1");
+//		   UART_UartPuts("1");
 		   break;
 	   }
 	   case BUTTON_ID_PLUS:
 	   {
-		   UART_UartPuts("2");
+//		   UART_UartPuts("2");
 		   break;
 	   }
 	   case BUTTON_ID_MINUS:
 	   {
-		   UART_UartPuts("3");
+//		   UART_UartPuts("3");
 		   break;
 	   }
 	   case BUTTON_ID_SELECT:
 	   {
-		   UART_UartPuts("4");
+//		   UART_UartPuts("4");
 		   break;
 	   }
 	   default:

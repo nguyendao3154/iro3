@@ -65,6 +65,8 @@ BOARD_InitPins:
   - {pin_num: '6', peripheral: TSI, signal: 'CH, 1', pin_signal: TSI0_CH1/PTE4/BUSOUT/CAN0_RX/EWM_OUT_b}
   - {pin_num: '4', peripheral: TSI, signal: 'CH, 2', pin_signal: TSI0_CH2/PTE10/CLKOUT}
   - {pin_num: '3', peripheral: TSI, signal: 'CH, 3', pin_signal: TSI0_CH3/PTE11/PWT_IN1/LPTMR0_ALT1}
+  - {pin_num: '35', peripheral: LPI2C0, signal: SCL, pin_signal: PTA3/LPI2C0_SCL/EWM_IN/LPUART0_TX}
+  - {pin_num: '36', peripheral: LPI2C0, signal: SDA, pin_signal: PTA2/LPI2C0_SDA/EWM_OUT_b/LPUART0_RX}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
  */
 /* clang-format on */
@@ -209,6 +211,12 @@ void BOARD_InitPins(void)
 
     /* PORTA1 (pin 37) is configured as ADC0_SE1 */
     PORT_SetPinMux(PORTA, 1U, kPORT_PinDisabledOrAnalog);
+
+    /* PORTA2 (pin 36) is configured as LPI2C0_SDA */
+    PORT_SetPinMux(PORTA, 2U, kPORT_MuxAlt3);
+
+    /* PORTA3 (pin 35) is configured as LPI2C0_SCL */
+    PORT_SetPinMux(PORTA, 3U, kPORT_MuxAlt3);
 
     /* PORTB0 (pin 27) is configured as LPUART0_RX */
     PORT_SetPinMux(PORTB, 0U, kPORT_MuxAlt2);

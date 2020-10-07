@@ -37,20 +37,27 @@
 ******************************************************************************/
 
 #include <config.h>
+#include "fsl_lpi2c.h"
 /******************************************************************************
 * Constants
 ******************************************************************************/
-
+typedef enum _flash_block_address{
+	FLASH_DF_BLOCK_0       = 0x00100000,    /*   1KB: 0x00100000 - 0x001003ff */
+	FLASH_DF_BLOCK_1       = 0x00100400,    /*   1KB: 0x00100400 - 0x001007ff */
+	FLASH_DF_BLOCK_2       = 0x00100800,    /*   1KB: 0x00100800 - 0x00100bff */
+	FLASH_DF_BLOCK_3       = 0x00100C00,    /*   1KB: 0x00100C00 - 0x00100fff */
+	FLASH_DF_BLOCK_4       = 0x00101000,    /*   1KB: 0x00101000 - 0x001013ff */
+}flash_block_address_t;
 
 
 /******************************************************************************
 * Macros
 ******************************************************************************/
-//#define FILLTER_TIME_BLOCK 		FLASH_DF_BLOCK_0
-//#define USER_CONFIG_BLOCK 		FLASH_DF_BLOCK_1
-//#define TDS_PARAM_BLOCK     	FLASH_DF_BLOCK_2
-//#define FILLTER_EXPIRE_BLOCK 	FLASH_DF_BLOCK_3
-//#define CURENT_DATA_BLOCK 		FLASH_DF_BLOCK_4
+#define FILLTER_TIME_BLOCK 		FLASH_DF_BLOCK_0
+#define USER_CONFIG_BLOCK 		FLASH_DF_BLOCK_1
+#define TDS_PARAM_BLOCK     	FLASH_DF_BLOCK_2
+#define FILLTER_EXPIRE_BLOCK 	FLASH_DF_BLOCK_3
+#define CURENT_DATA_BLOCK 		FLASH_DF_BLOCK_4
 
 #define MAX_LEN_FLASH       (1024) //1Kb
 #define BYTE_SAVE_LEN      (2)
@@ -74,8 +81,8 @@ union data_len
 ******************************************************************************/
 void flash_app_init();
 //void flash_app_eraseBlock(flash_block_address_t blockAdress);
-//bool flash_app_writeBlock(uint8_t * data, flash_block_address_t blockAdress,uint16_t dataSize);
-//bool flash_app_readData(uint8* dataRead, flash_block_address_t blockAdress,uint16_t dataSize);
+bool flash_app_writeBlock(uint8_t * data, uint32_t blockAdress,size_t dataSize);
+bool flash_app_readData(uint8_t* dataRead, uint32_t blockAdress, size_t dataSize);
 void flash_app_factoryReset();
 
 /******************************************************************************

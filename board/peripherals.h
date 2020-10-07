@@ -15,6 +15,7 @@
 #include "fsl_lptmr.h"
 #include "fsl_ftm.h"
 #include "fsl_adc12.h"
+#include "fsl_lpi2c.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -61,6 +62,13 @@ extern "C" {
 #define ADC12_1_IRQN ADC0_IRQn
 /* ADC12_1 interrupt handler identifier. */
 #define ADC12_1_IRQHANDLER ADC0_IRQHandler
+/* BOARD_InitPeripherals defines for LPI2C0 */
+/* Definition of peripheral ID */
+#define LPI2C_1_PERIPHERAL LPI2C0
+/* Definition of clock source */
+#define LPI2C_1_CLOCK_FREQ CLOCK_GetIpFreq(kCLOCK_Lpi2c0)
+/* Transfer buffer size */
+#define LPI2C_1_MASTER_BUFFER_SIZE 1
 
 /***********************************************************************************************************************
  * Global variables
@@ -71,6 +79,10 @@ extern const ftm_config_t FTM_1_config;
 extern const adc12_config_t ADC12_1_config;
 extern adc12_channel_config_t ADC12_1_channelsConfig[1];
 extern const adc12_hardware_average_mode_t ADC12_1_hardwareAverageConfig;
+extern const lpi2c_master_config_t LPI2C_1_masterConfig;
+extern lpi2c_master_transfer_t LPI2C_1_masterTransfer;
+extern uint8_t LPI2C_1_masterBuffer[LPI2C_1_MASTER_BUFFER_SIZE];
+extern lpi2c_master_handle_t LPI2C_1_masterHandle;
 
 /***********************************************************************************************************************
  * Initialization functions

@@ -76,7 +76,7 @@ static uint32_t s_lifeTimeRemain[FILTER_NUM];
 
 void updateToFlash()
 {
-//	flash_app_writeBlock((uint8_t *)s_lifeTimeRemain, FILLTER_EXPIRE_BLOCK, sizeof(s_lifeTimeRemain));
+	flash_app_writeBlock((uint8_t *)s_lifeTimeRemain, FILLTER_EXPIRE_BLOCK, sizeof(s_lifeTimeRemain));
 }
 
 /******************************************************************************
@@ -95,13 +95,13 @@ void updateToFlash()
  */
 void filterExpire_init()
 {
-//    bool readOk = flash_app_readData((uint8_t*)s_lifeTimeRemain,FILLTER_EXPIRE_BLOCK,sizeof(s_lifeTimeRemain));
-//
-//    if(!readOk)
-//    {
-//    	memcpy(s_lifeTimeRemain,g_userConfig.s_lifeTimeTotal,sizeof(s_lifeTimeRemain));
-//    	updateToFlash();
-//    }
+   bool readOk = flash_app_readData((uint8_t*)s_lifeTimeRemain,FILLTER_EXPIRE_BLOCK,sizeof(s_lifeTimeRemain));
+
+   if(!readOk)
+   {
+   	memcpy(s_lifeTimeRemain,g_userConfig.s_lifeTimeTotal,sizeof(s_lifeTimeRemain));
+   	updateToFlash();
+   }
 
 }
 void filterExpire_resetToDefault()

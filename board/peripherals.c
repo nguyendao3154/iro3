@@ -302,6 +302,93 @@ void ADC12_1_init(void) {
 }
 
 /***********************************************************************************************************************
+ * LPI2C_1 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'LPI2C_1'
+- type: 'lpi2c'
+- mode: 'master'
+- type_id: 'lpi2c_540b08a1d4a23952ca7a6ac43c82d1e6'
+- functional_group: 'BOARD_InitPeripherals'
+- peripheral: 'LPI2C0'
+- config_sets:
+  - main:
+    - clockSource: 'Lpi2cClock'
+    - clockSourceFreq: 'GetIpFreq'
+    - interrupt:
+      - IRQn: 'LPI2C0_IRQn'
+      - enable_priority: 'false'
+      - priority: '0'
+      - enable_custom_name: 'false'
+    - quick_selection: 'qs_interrupt'
+  - master:
+    - mode: 'transfer'
+    - config:
+      - enableMaster: 'true'
+      - enableDoze: 'true'
+      - debugEnable: 'false'
+      - ignoreAck: 'false'
+      - pinConfig: 'kLPI2C_2PinOpenDrain'
+      - baudRate_Hz: '100000'
+      - busIdleTimeout_ns: '0'
+      - pinLowTimeout_ns: '0'
+      - sdaGlitchFilterWidth_ns: '0'
+      - sclGlitchFilterWidth_ns: '0'
+      - hostRequest:
+        - enable: 'false'
+        - source: 'kLPI2C_HostRequestExternalPin'
+        - polarity: 'kLPI2C_HostRequestPinActiveHigh'
+    - transfer:
+      - blocking: 'false'
+      - flags: ''
+      - slaveAddress: '0'
+      - direction: 'kLPI2C_Write'
+      - subaddress: '0'
+      - subaddressSize: '1'
+      - dataSize: '1'
+      - callback:
+        - name: ''
+        - userData: ''
+    - quick_selection: 'qs_master_transfer'
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const lpi2c_master_config_t LPI2C_1_masterConfig = {
+  .enableMaster = true,
+  .enableDoze = true,
+  .debugEnable = false,
+  .ignoreAck = false,
+  .pinConfig = kLPI2C_2PinOpenDrain,
+  .baudRate_Hz = 100000,
+  .busIdleTimeout_ns = 0,
+  .pinLowTimeout_ns = 0,
+  .sdaGlitchFilterWidth_ns = 0,
+  .sclGlitchFilterWidth_ns = 0,
+  .hostRequest = {
+    .enable = false,
+    .source = kLPI2C_HostRequestExternalPin,
+    .polarity = kLPI2C_HostRequestPinActiveHigh
+  }
+};
+lpi2c_master_transfer_t LPI2C_1_masterTransfer = {
+  .flags = kLPI2C_TransferDefaultFlag,
+  .slaveAddress = 0,
+  .direction = kLPI2C_Write,
+  .subaddress = 0,
+  .subaddressSize = 1,
+  .data = LPI2C_1_masterBuffer,
+  .dataSize = 1
+};
+lpi2c_master_handle_t LPI2C_1_masterHandle;
+uint8_t LPI2C_1_masterBuffer[LPI2C_1_MASTER_BUFFER_SIZE];
+
+void LPI2C_1_init(void) {
+  LPI2C_MasterInit(LPI2C_1_PERIPHERAL, &LPI2C_1_masterConfig, LPI2C_1_CLOCK_FREQ);
+  LPI2C_MasterTransferCreateHandle(LPI2C_1_PERIPHERAL, &LPI2C_1_masterHandle, NULL, NULL);
+}
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitPeripherals(void)
@@ -311,6 +398,7 @@ void BOARD_InitPeripherals(void)
   LPTMR_1_init();
   FTM_1_init();
   ADC12_1_init();
+  LPI2C_1_init();
 }
 
 /***********************************************************************************************************************

@@ -195,48 +195,48 @@ void checkPumpRunTime()
 		newErrorOccur(ERROR_TYPE_PUMP_RUN_OVER_TIME);
 	}
 }
-//void checkTdsLimit()
-//{
-//#ifdef ENABLE_TDS_LIMIT_CHECK
-//	static uint32_t timeTdsLimitIn = 0, timeTdsLimitOut = 0;
-//	if((ADC_GetTdsValueDisplay(TDS_IN_VALUE) > g_userConfig.tdsLimitIn) && (!currentErrors[ERROR_TYPE_TDS_IN]))
-//	{
-//		if(timeTdsLimitIn == 0)
-//		{
-//			timeTdsLimitIn = g_sysTime;
-//		}else if(elapsedTime(g_sysTime,timeTdsLimitIn) > TDS_LIMIT_DELAY)
-//		{
-//			newErrorOccur(ERROR_TYPE_TDS_IN);
-//		}
-//	}
-//	if((ADC_GetTdsValueDisplay(TDS_OUT_VALUE) > g_userConfig.tdsLimitOut)&& (!currentErrors[ERROR_TYPE_TDS_OUT]))
-//	{
-//		if(timeTdsLimitOut == 0)
-//		{
-//			timeTdsLimitOut = g_sysTime;
-//		}else if(elapsedTime(g_sysTime,timeTdsLimitOut) > TDS_LIMIT_DELAY)
-//		{
-//			newErrorOccur(ERROR_TYPE_TDS_OUT);
-//		}
-//	}
-//	if(ADC_GetTdsValueDisplay(TDS_IN_VALUE) < g_userConfig.tdsLimitIn)
-//	{
-//		if(currentErrors[ERROR_TYPE_TDS_IN])
-//		{
-//			currentErrors[ERROR_TYPE_TDS_IN] = false;
-//		}
-//		timeTdsLimitIn = 0;
-//	}
-//	if(ADC_GetTdsValueDisplay(TDS_OUT_VALUE) < g_userConfig.tdsLimitOut)
-//	{
-//		if(currentErrors[ERROR_TYPE_TDS_OUT])
-//		{
-//			currentErrors[ERROR_TYPE_TDS_OUT] = false;
-//		}
-//		timeTdsLimitOut = 0;
-//	}
-//#endif
-//}
+void checkTdsLimit()
+{
+#ifdef ENABLE_TDS_LIMIT_CHECK
+	static uint32_t timeTdsLimitIn = 0, timeTdsLimitOut = 0;
+	if((ADC_GetTdsValueDisplay(TDS_IN_VALUE) > g_userConfig.tdsLimitIn) && (!currentErrors[ERROR_TYPE_TDS_IN]))
+	{
+		if(timeTdsLimitIn == 0)
+		{
+			timeTdsLimitIn = g_sysTime;
+		}else if(elapsedTime(g_sysTime,timeTdsLimitIn) > TDS_LIMIT_DELAY)
+		{
+			newErrorOccur(ERROR_TYPE_TDS_IN);
+		}
+	}
+	if((ADC_GetTdsValueDisplay(TDS_OUT_VALUE) > g_userConfig.tdsLimitOut)&& (!currentErrors[ERROR_TYPE_TDS_OUT]))
+	{
+		if(timeTdsLimitOut == 0)
+		{
+			timeTdsLimitOut = g_sysTime;
+		}else if(elapsedTime(g_sysTime,timeTdsLimitOut) > TDS_LIMIT_DELAY)
+		{
+			newErrorOccur(ERROR_TYPE_TDS_OUT);
+		}
+	}
+	if(ADC_GetTdsValueDisplay(TDS_IN_VALUE) < g_userConfig.tdsLimitIn)
+	{
+		if(currentErrors[ERROR_TYPE_TDS_IN])
+		{
+			currentErrors[ERROR_TYPE_TDS_IN] = false;
+		}
+		timeTdsLimitIn = 0;
+	}
+	if(ADC_GetTdsValueDisplay(TDS_OUT_VALUE) < g_userConfig.tdsLimitOut)
+	{
+		if(currentErrors[ERROR_TYPE_TDS_OUT])
+		{
+			currentErrors[ERROR_TYPE_TDS_OUT] = false;
+		}
+		timeTdsLimitOut = 0;
+	}
+#endif
+}
 /*
  * check dò nước cổng dò 1.
  * nếu nước rò, 10s sau kiểm tra lại, vẫn rò thì báo lỗi.
@@ -287,7 +287,7 @@ void ErrorCheck_process()
 	checkWaterIn();
 	checkPumpRunTime();
 #ifdef ENABLE_TDS_OUT
-//	checkTdsLimit();
+	checkTdsLimit();
 #endif
 	checkH2ODet();
 	if((lastError == true) && (ErrorCheck_haveError()== false))
